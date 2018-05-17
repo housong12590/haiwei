@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% for datum in data %}
+    {{ datum.name }}
+    {{ datum.tag }}
+    {{ datum.branch }}
+    {{ datum.status }}
+    {{ datum.created_at }}
+    {{ datum.command }}
+    <br/>
+{% endfor %}
+
+
+</body>
+</html>
