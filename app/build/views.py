@@ -26,6 +26,7 @@ def record():
 
 @app.route('/index')
 def index():
-    sql = "SELECT name,tag,branch,status,command,created_at FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);"
+    sql = "SELECT name,tag,branch,status,command,created_at FROM builds WHERE tag IN \
+          (SELECT max(tag) FROM builds GROUP BY name);"
     data = db.session.execute(sql)
     return render_template('build/index.html', data=data)
