@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from app.helper import make_response, parse_sql_error
 
 
-@app.route('/record', methods=['GET', 'POST'])
+@app.route('/', methods=['POST'])
 def record():
     try:
         build = Build(
