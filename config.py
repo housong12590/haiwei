@@ -11,3 +11,8 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MONGO_URI = 'mongodb://123.207.152.86:27017/haiwei'
+
+    MONGODB_SETTINGS = {
+        'db': 'project',
+        'host': 'mongodb://123.207.152.86:27017/haiwei'
+    }
