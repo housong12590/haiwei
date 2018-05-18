@@ -19,6 +19,7 @@ from mongoengine import *
 from datetime import datetime
 
 
+#:http://docs.mongoengine.org/guide/index.html
 class Build(Document):
     name = StringField(required=True)
     tag = StringField(required=True)
