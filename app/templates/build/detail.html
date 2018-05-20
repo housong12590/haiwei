@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-md-1">
+            项目名称
+        </div>
+        <div class="col-md-11">
+            {{ data.name }}
+        </div>
+
+        <div class="col-md-1">
+            镜像tag
+        </div>
+        <div class="col-md-11">
+            {{ data.tag }}
+        </div>
+
+        <div class="col-md-1">
+            构建状态
+        </div>
+        <div class="col-md-11">
+            {{ data.status }}
+        </div>
+        <div class="col-md-1">
+            git分支
+        </div>
+        <div class="col-md-11">
+            {{ data.branch }}
+        </div>
+
+        <div class="col-md-1">
+            构建时间
+        </div>
+        <div class="col-md-11">
+            {{ data.created_at }}
+        </div>
+
+        <div class="col-md-1">
+            run命令
+        </div>
+        <div class="col-md-11">
+            {{ data.command }}
+        </div>
+
+    </div>
+{% endblock %}
