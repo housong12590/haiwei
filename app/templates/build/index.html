@@ -2,24 +2,31 @@
 
 {% block content %}
     <div class="container">
-        <table class="table table-bordered">
+        <table class="table">
             <thead>
             <tr>
-                <th>项目</th>
-                <th>tag</th>
+                <th>项目名称</th>
+                <th>镜像tag</th>
                 <th>git分支</th>
-                <th>状态</th>
-                <th>创建时间</th>
+                <th>构建状态</th>
+                <th>构建时间</th>
+                <th>run命令</th>
             </tr>
             </thead>
             <tbody>
             {% for datum in data %}
                 <tr>
-                    <td>{{datum.name }}</td>
-                    <td>{{datum.tag }}</td>
-                    <td>{{datum.branch }}</td>
-                    <td>{{datum.status }}</td>
-                    <td>{{datum.created_at }}</td>
+                    <th>{{ datum.name }}</th>
+                    <td>{{ datum.tag }}</td>
+                    <td>{{ datum.branch }}</td>
+                    <td sytle="color:green;"><span class="glyphicon glyphicon-ok"></span>{{ datum.status }}</td>
+                    <td>{{ datum.created_at }}</td>
+                    <td>
+                        <button class="btn btn-primary btn-xs"
+                                data-clipboard-text="{{ datum.command }}">
+                            复制
+                        </button>
+                    </td>
                 </tr>
             {% endfor %}
 
@@ -27,4 +34,9 @@
         </table>
     </div>
 
+    <script src="{{ url_for('static',filename='js/clipboard.min.js') }}"></script>
+    <script>
+        var clipboard = new ClipboardJS('.btn');
+    </script>
 {% endblock %}
+
