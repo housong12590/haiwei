@@ -5,6 +5,7 @@ from app import db
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 from app.helper import make_response, parse_sql_error
+import re
 
 
 @app.route('/record', methods=['POST'])
@@ -17,6 +18,7 @@ def record():
             status=request.form.get('status'),
             command=request.form.get('command')
         )
+        build.command = re.sub(r'(-[vpe])', r'\\\n\1', build.command)
         db.session.add(build)
         db.session.commit()
     except IntegrityError as e:
