@@ -48,7 +48,16 @@ def detail(project, tag):
 def images(project):
     try:
         data = db.session.query(Build).filter(Build.name == project) \
-            .order_by(Build.created_at).all()
+            .order_by(Build.tag.desc()).all()
         return render_template('build/images.html', data=data)
     except NoResultFound:
         abort(404)
+
+
+@app.route('/update')
+def update():
+    data = db.session.query(Build).all()
+    for item in data:
+        item.command = re.sub(r'(-[vpe])', r'\\\n\1', item.command)
+        db.session.update(item)
+    return '更新完成'
