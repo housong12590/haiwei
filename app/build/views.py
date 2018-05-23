@@ -39,6 +39,7 @@ def detail(project, tag):
     try:
         data = db.session.query(Build).filter(Build.name == project) \
             .filter(Build.tag == tag).one()
+        data.command = data.command.replace('\n', '<br/>')
         return render_template('build/detail.html', data=data)
     except NoResultFound:
         abort(404)
@@ -52,12 +53,3 @@ def images(project):
         return render_template('build/images.html', data=data)
     except NoResultFound:
         abort(404)
-
-
-@app.route('/update')
-def update():
-    data = db.session.query(Build).all()
-    for item in data:
-        item.command = re.sub(r'(-[vpe])', r'\\\n\1', item.command)
-        db.session.update(item)
-    return '更新完成'
