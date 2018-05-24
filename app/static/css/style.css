@@ -2,3 +2,11 @@
 .glyphicon-ok {
     color: green !important;
 }
+
+.navbar h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 49px;
+    margin-left: 100px;
+    font-size: 20px;
+}

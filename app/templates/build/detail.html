@@ -41,8 +41,15 @@
             run命令
         </div>
         <div class="col-md-11">
-            <p>{{ data.command |safe }}</p>
+            <pre><code>{{ data.command |safe }}</code></pre>
         </div>
 
     </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
 {% endblock %}

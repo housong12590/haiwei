@@ -31,6 +31,7 @@ def record():
 def index():
     sql = "SELECT * FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);"
     data = db.session.execute(sql)
+    
     return render_template('build/index.html', data=data)
 
 

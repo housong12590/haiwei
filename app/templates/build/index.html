@@ -16,8 +16,12 @@
             <tbody>
             {% for item in data %}
                 <tr>
-                    <th><a href="{{ url_for('build.images',project=item.name) }}">{{ item.name }}</a></th>
-                    <td><a href="{{ url_for('build.detail',project=item.name,tag=item.tag) }}">{{ item.tag }}</a></td>
+                    <th>
+                        <a href="{{ url_for('build.images',project=item.name) }}">{{ item.name }}</a>
+                    </th>
+                    <td>
+                        <a href="{{ url_for('build.detail',project=item.name,tag=item.tag) }}">{{ item.tag }}</a>
+                    </td>
                     <td>{{ item.branch }}</td>
                     <td><span class="glyphicon glyphicon-ok"></span></td>
                     <td>{{ item.created_at }}</td>
@@ -34,7 +38,10 @@
         </table>
     </div>
 
-    <script src="{{ url_for('static',filename='js/clipboard.min.js') }}"></script>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
     <script>
         var clipboard = new ClipboardJS('.btn');
     </script>
