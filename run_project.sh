@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-git pull
-
 docker rm -f haiwei
 
 docker rmi -f haiwei
