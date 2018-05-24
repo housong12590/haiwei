@@ -1,17 +1,18 @@
+from orator import Model
+from orator.orm import scope
 from app import db
-import datetime
 
 
-class Build(db.Model):
-    __tablename__ = 'builds'
+class Build(Model):
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(48), nullable=False)
-    tag = db.Column(db.String(48), nullable=False)
-    branch = db.Column(db.String(50), nullable=False)
-    status = db.Column(db.String(30), nullable=False)
-    command = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    def __str__(self):
+        return self.to_json()
 
-    def __repr__(self):
-        return '<build {} {}>'.format(self.name, self.tag)
+    @scope
+    def project_last_tag(self, query):
+        sql = " select * FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);"
+        tags = query.select('tag').group_by('name').max('tag')
+        print(tags)
+        # result = query.select("*").where_in('tag', ).get()
+        # print(result)
+        return []
