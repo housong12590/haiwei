@@ -12,14 +12,14 @@ def record():
         Build.insert(
             name=request.form.get('name'),
             tag=request.form.get('tag'),
-            status=request.form.get('status'),
+            status=bool(request.form.get('status')),
             branch=request.form.get('branch'),
             host=request.form.get('host'),
             port=request.form.get('port'),
             notify=request.form.get('notify'),
             command=re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command')),
             image_name=request.form.get('image_name'),
-            send=request.form.get('send'),
+            send=bool(request.form.get('send')),
             dockerfile=request.form.get('dockerfile')
         )
     except QueryException as e:
