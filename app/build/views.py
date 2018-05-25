@@ -19,7 +19,7 @@ def record():
             notify=request.form.get('notify'),
             command=re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command')),
             image_name=request.form.get('image_name'),
-            end=request.form.get('send'),
+            send=request.form.get('send'),
             dockerfile=request.form.get('dockerfile')
         )
     except QueryException as e:
