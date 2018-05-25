@@ -20,7 +20,8 @@ def record():
             command=re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command')),
             image_name=request.form.get('image_name'),
             send=bool(request.form.get('send')),
-            dockerfile=request.form.get('dockerfile')
+            dockerfile=request.form.get('dockerfile'),
+            code_registry=request.form.get('code_registry')
         )
     except QueryException as e:
         return make_response('fail', 404, e.args)

@@ -18,6 +18,7 @@ class CreateBuildsTable(Migration):
             table.string('port').nullable()
             table.string('notify').nullable()
             table.string('image_name').nullable()
+            table.string('code_registry').nullable()
             table.boolean('send').nullable().default(0)
             table.text('dockerfile').nullable()
             table.index('name')

@@ -7,7 +7,8 @@ class Build(Model):
 
     @scope
     def project_last_tag(self, query):
+        print(query)
         result = db.select(
             "SELECT * FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);")
-        print(result)
+        # print(result)
         return result
