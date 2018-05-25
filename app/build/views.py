@@ -14,7 +14,13 @@ def record():
             tag=request.form.get('tag'),
             status=request.form.get('status'),
             branch=request.form.get('branch'),
-            command=re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command'))
+            host=request.form.get('host'),
+            port=request.form.get('port'),
+            notify=request.form.get('notify'),
+            command=re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command')),
+            image_name=request.form.get('image_name'),
+            end=request.form.get('send'),
+            dockerfile=request.form.get('dockerfile')
         )
     except QueryException as e:
         return make_response('fail', 404, e.args)

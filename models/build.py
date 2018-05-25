@@ -5,9 +5,6 @@ from app import db
 
 class Build(Model):
 
-    def __str__(self):
-        return self.to_json()
-
     @scope
     def project_last_tag(self, query):
         result = db.select(
