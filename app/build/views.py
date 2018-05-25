@@ -9,13 +9,13 @@ import re
 @app.route('/record', methods=['POST'])
 def record():
     try:
-        build = Build()
-        build.name = request.form.get('name')
-        build.tag = request.form.get('tag')
-        build.status = request.form.get('status')
-        build.branch = request.form.get('branch')
-        build.command = re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command'))
-        build.save()
+        Build.insert(
+            name=request.form.get('name'),
+            tag=request.form.get('tag'),
+            status=request.form.get('status'),
+            branch=request.form.get('branch'),
+            command=re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command'))
+        )
     except QueryException as e:
         return make_response('fail', 404, e.args)
     return make_response('success')
