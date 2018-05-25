@@ -2,6 +2,7 @@ from flask import Flask
 from config import Config
 from flask_bootstrap import Bootstrap
 from flask_orator import Orator
+from app.helper import utc2local
 
 db = Orator()
 bootstrap = Bootstrap()
@@ -17,6 +18,11 @@ def create_app():
     app.register_blueprint(build_bp, url_prefix='/build')
     # mysql 日志输出
     mysql_log_output()
+
+    template_filters = {
+        'utc2local': utc2local,
+    }
+    app.jinja_env.filters.update(template_filters)
     return app
 
 

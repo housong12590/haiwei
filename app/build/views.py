@@ -1,9 +1,10 @@
+import re
 from . import build as app
 from flask import request, render_template
 from models import Build
 from orator.exceptions.query import QueryException
 from app.helper import make_response
-import re
+from app.utils.db_helper import SQLHelper
 
 
 @app.route('/record', methods=['POST'])
@@ -30,18 +31,20 @@ def record():
 
 @app.route('/index')
 def index():
-    data = Build.project_last_tag()
+    sql = "SELECT name,tag,branch,host,created_at,command FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name)"
+    data = SQLHelper.fetch_all(sql)
     return render_template('build/index.html', data=data)
 
 
 @app.route('/<project>/<tag>')
 def detail(project, tag):
-    build = Build.where('name', project).where('tag', tag).first_or_fail()
-    build.command = build.command.replace('\n', '<br/>')
-    return render_template('build/detail.html', data=build)
+    data = SQLHelper.fetch_one("SELECT * FROM builds WHERE name=%s AND tag=%s", [project, tag])
+    data['command'] = data['command'].replace('\n', '<br/>')
+    return render_template('build/detail.html', data=data)
 
 
 @app.route('/<project>')
 def images(project):
-    data = Build.where('name', project).order_by('tag', 'desc').get()
+    sql = "SELECT name,tag,branch,host,command,created_at FROM builds WHERE name=%s ORDER BY tag DESC"
+    data = SQLHelper.fetch_all(sql, [project])
     return render_template('build/images.html', data=data)

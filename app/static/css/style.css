@@ -9,4 +9,9 @@
     line-height: 49px;
     margin-left: 100px;
     font-size: 20px;
+    color: black;
+}
+
+nav .home h3:hover {
+ text-decoration: none;
 }

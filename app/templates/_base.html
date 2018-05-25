@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}南京海维数据服务有限公司{% endblock %}
+{% block title %}南京海维{% endblock %}
 
 {% block styles %}
     {{ super() }}
@@ -10,7 +10,7 @@
 
 {% block navbar %}
     <nav class="navbar navbar-default">
-        <h3>南京海维</h3>
+        <a class="home" href="{{ url_for('build.index') }}"><h3>南京海维</h3></a>
     </nav>
 {% endblock %}
 

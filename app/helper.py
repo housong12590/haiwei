@@ -1,4 +1,5 @@
 from flask import jsonify
+import datetime
 
 
 def make_response(msg='success', status_code=200, data=None):
@@ -15,3 +16,8 @@ def make_response(msg='success', status_code=200, data=None):
         'data': data
     }
     return jsonify(response)
+
+
+def utc2local(utc_time, ftime='%Y-%m-%d %H:%M:%S'):
+    time_now = utc_time + datetime.timedelta(hours=8)
+    return time_now.strftime(ftime)

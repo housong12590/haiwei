@@ -2,13 +2,13 @@
 
 {% block content %}
     <div class="container">
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
             <tr>
                 <th>项目名称</th>
                 <th>镜像tag</th>
                 <th>git分支</th>
-                <th>构建状态</th>
+                <th>内网地址</th>
                 <th>构建时间</th>
                 <th>run命令</th>
             </tr>
@@ -19,8 +19,8 @@
                     <th>{{ item.name }}</th>
                     <td>{{ item.tag }}</td>
                     <td>{{ item.branch }}</td>
-                    <td><span class="glyphicon glyphicon-ok"></span></td>
-                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.host }}</td>
+                    <td>{{ item.created_at | utc2local }}</td>
                     <td>
                         <button class="btn btn-primary btn-xs"
                                 data-clipboard-text="{{ item.command }}">
