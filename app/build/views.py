@@ -29,14 +29,12 @@ def index():
 
 @app.route('/<project>/<tag>')
 def detail(project, tag):
-    build = Build()
-    build = build.where('name', project).where('tag', tag).first_or_fail()
+    build = Build.where('name', project).where('tag', tag).first_or_fail()
     build.command = build.command.replace('\n', '<br/>')
     return render_template('build/detail.html', data=build)
 
 
 @app.route('/<project>')
 def images(project):
-    build = Build()
-    data = build.where('name', project).order_by('tab', 'desc').get()
+    data = Build.where('name', project).order_by('tag', 'desc').get()
     return render_template('build/images.html', data=data)
