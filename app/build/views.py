@@ -23,16 +23,7 @@ def record():
 
 @app.route('/index')
 def index():
-    # sql = "SELECT * FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);"
-    # data = db.session.execute(sql)
-    build = Build()
     data = Build.project_last_tag()
-    # for i in data:
-    #     print(i)
-
-    # print(Build.group_by('name').max('tag'))
-    # data = build.where_in('tag', build.group_by('name').max('tag')).get()
-    data = []
     return render_template('build/index.html', data=data)
 
 

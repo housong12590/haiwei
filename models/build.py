@@ -10,9 +10,6 @@ class Build(Model):
 
     @scope
     def project_last_tag(self, query):
-        sql = " select * FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);"
-        tags = query.select('tag').group_by('name').max('tag')
-        print(tags)
-        # result = query.select("*").where_in('tag', ).get()
-        # print(result)
-        return []
+        result = db.select(
+            "SELECT * FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name);")
+        return result
