@@ -3,56 +3,117 @@
 {% block content %}
 
     <div class="container">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>{{ data.name }} - 构建详情</h4>
+        <div class="page-header">
+            <h3> 构建详情</h3>
+        </div>
+        <div class="container">
+            <div class="col-md-1">
+                <label>项目名称:</label>
             </div>
-            <div class="panel-body">
-                <div class="col-md-1">
-                    项目名称
-                </div>
-                <div class="col-md-11">
-                    {{ data.name }}
-                </div>
-
-                <div class="col-md-1">
-                    镜像tag
-                </div>
-                <div class="col-md-11">
-                    {{ data.tag }}
-                </div>
-
-                <div class="col-md-1">
-                    构建状态
-                </div>
-                <div class="col-md-11">
-                    <span class="{% if data.status %}{{ 'glyphicon glyphicon-ok' }}{% else %}{{ 'glyphicon glyphicon-remove' }}{% endif %}"></span>
-                </div>
-                <div class="col-md-1">
-                    git分支
-                </div>
-                <div class="col-md-11">
-                    {{ data.branch }}
-                </div>
-
-                <div class="col-md-1">
-                    构建时间
-                </div>
-                <div class="col-md-11">
-                    {{ data.created_at|utc2local }}
-                </div>
-
-                <div class="col-md-1">
-                    run命令
-                </div>
-                <div class="col-md-11">
-                    <pre><code>{{ data.command |safe }}</code></pre>
-                </div>
-
+            <div class="col-md-11">
+                <strong> {{ data.name }}</strong>
             </div>
         </div>
-    </div>
 
+        <div class="container">
+            <div class="col-md-1">
+                <label>镜像:</label>
+            </div>
+            <div class="col-md-11">
+                {{ '192.168.0.210/'~data.image_name~':'~data.tag }}
+                <span class="btn btn-primary btn-xs"
+                      data-clipboard-text="{{ '192.168.0.210/'~data.image_name~':'~data.tag }}">
+                    复制
+                </span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>构建状态:</label>
+            </div>
+            <div class="col-md-11">
+                {{ 'success' }}
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>端口号:</label>
+            </div>
+            <div class="col-md-11">
+                {{ data.port }}
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>内网地址:</label>
+            </div>
+            <div class="col-md-11">
+                <a href="{{ 'http://'~data.host }}" target="_blank">{{ data.host }}</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>仓库地址:</label>
+            </div>
+            <div class="col-md-11">
+                <a href="{{ 'http://'~data.code_registry }}" target="_blank">{{ data.code_registry }}</a>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>git分支:</label>
+            </div>
+            <div class="col-md-11">
+                <span class="label label-primary">{{ data.branch }}</span>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>通知方式:</label>
+            </div>
+            <div class="col-md-11">
+                {{ data.notify }}
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>构建时间:</label>
+            </div>
+            <div class="col-md-11">
+                {{ data.created_at|utc2local }}
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>run命令:</label>
+            </div>
+            <div class="col-md-11">
+                <pre><code>{{ data.command |safe }}</code></pre>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="col-md-1">
+                <label>Dockerfile:</label>
+            </div>
+            <div class="col-md-11">
+                <pre><code>{{ data.dockerfile }}</code></pre>
+            </div>
+        </div>
+
+
+    </div>
 
 
 {% endblock %}
@@ -61,5 +122,6 @@
     {{ super() }}
     <script>
         hljs.initHighlightingOnLoad();
+        var clipboard = new ClipboardJS('.btn');
     </script>
 {% endblock %}

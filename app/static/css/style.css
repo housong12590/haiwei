@@ -12,6 +12,6 @@
     color: black;
 }
 
-nav .home h3:hover {
+.navbar a:hover {
  text-decoration: none;
 }

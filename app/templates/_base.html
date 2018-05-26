@@ -1,27 +1,34 @@
-{% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}南京海维{% endblock %}</title>
+    {% block styles %}
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap-theme.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/github.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    {% block navbar %}
+        <nav class="navbar navbar-default">
+            <a class="home" href="{{ url_for('build.index') }}"><h3>南京海维</h3></a>
+        </nav>
+    {% endblock %}
 
-{% block title %}南京海维{% endblock %}
+    {% block content %}
 
-{% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/github.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
+    {% endblock %}
+
 {% endblock %}
-
-{% block navbar %}
-    <nav class="navbar navbar-default">
-        <a class="home" href="{{ url_for('build.index') }}"><h3>南京海维</h3></a>
-    </nav>
-{% endblock %}
-
-{% block content %}
-
-
-{% endblock %}
-
 {% block scripts %}
-    {{ super() }}
+    <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/highlight.pack.js') }}"></script>
     <script src="{{ url_for('static',filename='js/clipboard.min.js') }}"></script>
-{%- endblock scripts %}
+{% endblock %}
 
+</body>
+</html>
