@@ -30,7 +30,7 @@
                     </td>
                     <td><a href="{{ 'http://'~item.host }}" target="_blank">{{ item.host }}</a></td>
                     <td>
-                        <span class="label {{ 'label-info' if item.branch == 'develop' else 'label-primary' }}">{{ item.branch }}</span>
+                        <span class="label {{ 'label-warning' if item.branch == 'develop' else 'label-primary' }}">{{ item.branch }}</span>
                     </td>
                     <td>{{ item.created_at | utc2local }}</td>
                     <td>
