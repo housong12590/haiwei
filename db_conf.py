@@ -7,6 +7,6 @@ DATABASES = {
         'database': 'tx_ops',
         'user': 'root',
         'password': 'pss123546',
-        'log_queries': True
+        'log_queries': False
     }
 }

@@ -1,4 +1,5 @@
 import db_conf
+import os
 
 
 class Config(object):
@@ -6,14 +7,25 @@ class Config(object):
 
     SECRET_KEY = 'mwpcfnnwttcclwaf0r3bxwe3jr7epk74'
 
-    MYSQL_HOST = '123.207.152.86'
+    MYSQL_HOST = os.environ.get('MYSQL_HOST')
 
-    MYSQL_PORT = 3306
+    MYSQL_PORT = os.environ.get('MYSQL_PORT')
 
-    MYSQL_DB = 'tx_ops'
+    MYSQL_DB = os.environ.get('MYSQL_DB')
 
-    MYSQL_USER = 'root'
+    MYSQL_USER = os.environ.get('MYSQL_USER')
 
-    MYSQL_PWD = 'pss123546'
+    MYSQL_PWD = os.environ.get('MYSQL_PASSWORD')
+
+    ORATOR_DATABASES = db_conf.DATABASES
+
+
+class DevConfig(Config):
+
+    ORATOR_DATABASES = db_conf.DATABASES
+
+
+class ProConfig(Config):
+    DEBUG = False
 
     ORATOR_DATABASES = db_conf.DATABASES

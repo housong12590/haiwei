@@ -49,3 +49,8 @@ def images(project):
     sql = "SELECT name,tag,branch,host,command,created_at FROM builds WHERE name=%s ORDER BY tag DESC"
     data = SQLHelper.fetch_all(sql, [project])
     return render_template('build/images.html', data=data)
+
+
+@app.route('/create')
+def pas():
+    return render_template('environ/create.html')

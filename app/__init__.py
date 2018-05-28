@@ -1,5 +1,4 @@
 from flask import Flask
-from config import Config
 from flask_bootstrap import Bootstrap
 from flask_orator import Orator
 from app.helper import utc2local
@@ -8,16 +7,17 @@ db = Orator()
 bootstrap = Bootstrap()
 
 
-def create_app():
+def create_app(config):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config)
     db.init_app(app)
     bootstrap.init_app(app)
 
     from .build import build as build_bp
     app.register_blueprint(build_bp, url_prefix='/build')
     # mysql 日志输出
-    mysql_log_output()
+    if config.DEBUG:
+        mysql_log_output()
 
     template_filters = {
         'utc2local': utc2local,
