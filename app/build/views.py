@@ -22,7 +22,8 @@ def record():
             image_name=request.form.get('image_name'),
             send=bool(request.form.get('send')),
             dockerfile=request.form.get('dockerfile'),
-            code_registry=request.form.get('code_registry')
+            code_registry=request.form.get('code_registry'),
+            message=request.form.get('message')
         )
     except QueryException as e:
         return make_response('fail', 404, e.args)

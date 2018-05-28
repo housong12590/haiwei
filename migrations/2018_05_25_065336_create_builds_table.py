@@ -21,6 +21,7 @@ class CreateBuildsTable(Migration):
             table.string('code_registry').nullable()
             table.boolean('send').nullable().default(0)
             table.text('dockerfile').nullable()
+            table.string('message').nullable()
             table.index('name')
             table.index('tag')
             table.timestamps()
