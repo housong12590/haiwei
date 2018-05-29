@@ -1,0 +1,108 @@
+{% extends '_base.html' %}
+{% block title %}
+    环境变量
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="page-header">
+            <h3>{{ project |default('基础',true) }}环境变量</h3>
+        </div>
+
+        <button type="button" id="add-item" class="btn btn-primary">添加</button>
+        <button type="button" id="btn-save" class="btn btn-primary">保存</button>
+
+    </div>
+
+    <textarea style="display: none" id="template">
+        <div class="form-horizontal" id="$containerId$">
+            <div class="form-group">
+                <label class="col-sm-1 control-label">key-value</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="$key$" value="MYSQL_HOST"
+                           placeholder="key">
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" id="$value$" value="123456"
+                           placeholder="value">
+                </div>
+                <div class="col-sm-1">
+                    <button type="button" id="$deleteBtnId$" class="btn btn-danger">删除</button>
+                </div>
+            </div>
+        </div>
+    </textarea>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+
+        var count = 0;
+        var templateIdList = [];
+
+        $('#add-item').click(function () {
+            addTemplate();
+        });
+
+        for (var i = 0; i < 5; i++) {
+            addTemplate();
+        }
+
+        function addTemplate() {
+            var template = $('#template').val();
+
+            var JSON = getTemplateData();
+            // 替换html模版中的占位符
+            var html = template.temp(JSON.data);
+            // 添加html到容器
+            $("#add-item").before(html);
+
+            templateIdList.push(JSON.data);
+            // 删除点击事件
+            $('#' + JSON.data.deleteBtnId).click(function () {
+                var data = JSON.data;
+                templateIdList.splice($.inArray(data, templateIdList), 1);
+                var child = document.getElementById(data.containerId);
+                child.parentNode.removeChild(child);
+            });
+        }
+
+        function getTemplateData() {
+            count++;
+            return {
+                data: {
+                    key: 'key-' + count,
+                    value: 'value-' + count,
+                    containerId: 'container-id-' + count,
+                    deleteBtnId: 'deleteBtn-id-' + count
+                }
+            };
+        }
+
+        $('#btn-save').click(function () {
+            var resultList = [];
+            templateIdList.forEach(function (obj) {
+                var key = $('#' + obj.key).val();
+                var value = $('#' + obj.value).val();
+                resultList.push({key: key, value: value});
+            });
+            $.ajax({
+                type: "POST",
+                url: '{{ url_for('build.env_detail',project=project) }}',
+                data: JSON.stringify(resultList),
+                contentType: "application/json",
+                dataType: "json",
+                complete: function (resp) {
+                    console.log(resp);
+                    if (resp.status === 200) {
+                        console.log('提交成功')
+                    }
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

@@ -1,7 +1,7 @@
 import re
 from . import build as app
 from flask import request, render_template
-from models import Build
+from models import Build, Environ
 from orator.exceptions.query import QueryException
 from app.helper import make_response
 from app.utils.db_helper import SQLHelper
@@ -51,6 +51,16 @@ def images(project):
     return render_template('build/images.html', data=data)
 
 
-@app.route('/create')
-def pas():
-    return render_template('environ/create.html')
+@app.route('/environs', methods=['GET', 'POST'])
+@app.route('/environs/<string:project>', methods=['GET', 'POST'])
+def env_detail(project=None):
+    if project is None:
+        sql = 'SELECT * FROM environs WHERE parent_id = 0'
+    else:
+        sql = 'SELECT * FROM environs AS e1 JOIN environs AS e2 ON e1.parent_id = e2.id WHERE e1.name=%s AND e1.parent_id=0'
+    data = SQLHelper.fetch_all(sql, [project])
+    print(data)
+    if request.method == 'GET':
+        return render_template('environ/detail.html', project='coasts')
+    print(request.json)
+    return ''
