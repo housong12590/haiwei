@@ -32,22 +32,20 @@ def record():
 
 @app.route('/index')
 def index():
-    sql = "SELECT name,tag,branch,host,created_at,command FROM builds WHERE tag IN (SELECT max(tag) FROM builds GROUP BY name)"
-    data = SQLHelper.fetch_all(sql)
+    data = Build.project_last_images().get()
     return render_template('build/index.html', data=data)
 
 
 @app.route('/<project>/<tag>')
 def detail(project, tag):
-    data = SQLHelper.fetch_one("SELECT * FROM builds WHERE name=%s AND tag=%s", [project, tag])
-    data['command'] = data['command'].replace('\n', '<br/>')
+    data = Build.project_detail(project, tag).first()
+    data.command = data.command.replace('\n', '<br/>')
     return render_template('build/detail.html', data=data)
 
 
 @app.route('/<project>')
 def images(project):
-    sql = "SELECT name,tag,branch,host,command,created_at FROM builds WHERE name=%s ORDER BY tag DESC"
-    data = SQLHelper.fetch_all(sql, [project])
+    data = Build.where('name', project).order_by('tag', 'desc').get()
     return render_template('build/images.html', data=data)
 
 
@@ -64,3 +62,8 @@ def env_detail(project=None):
         return render_template('environ/detail.html', project='coasts')
     print(request.json)
     return ''
+
+
+@app.route('/')
+def basic_environs():
+    pass
