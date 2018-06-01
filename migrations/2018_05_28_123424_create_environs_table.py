@@ -13,8 +13,8 @@ class CreateEnvironsTable(Migration):
             table.string('key')
             table.string('value').default('')
             table.string('desc').nullable()
-            table.integer('parent_id', unsigned=True)
-            table.integer('project_id', unsigned=True)
+            table.integer('parent_id', unsigned=True).default(0)
+            table.integer('project_id', unsigned=True).default(0)
             table.timestamps()
 
     def down(self):

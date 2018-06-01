@@ -1,16 +1,16 @@
 import re
 from . import build as app
-from flask import request, render_template
-from models import Build, Environ
+from flask import request, render_template, redirect, url_for, jsonify
+from models import Build, Environ, Project
 from orator.exceptions.query import QueryException
 from app.helper import make_response
-from app.utils.db_helper import SQLHelper
 
 
 @app.route('/record', methods=['POST'])
 def record():
+    name = request.form.get('name')
     try:
-        Build.insert(
+        image_id = Build.insert(
             name=request.form.get('name'),
             tag=request.form.get('tag'),
             status=bool(request.form.get('status')),
@@ -25,6 +25,9 @@ def record():
             code_registry=request.form.get('code_registry'),
             message=request.form.get('message')
         )
+        project = Project.find_name_or_new(name)
+        project.last_image_id = image_id
+        project.save()
     except QueryException as e:
         return make_response('fail', 404, e.args)
     return make_response('success')
@@ -51,19 +54,33 @@ def images(project):
 
 @app.route('/environs', methods=['GET', 'POST'])
 @app.route('/environs/<string:project>', methods=['GET', 'POST'])
-def env_detail(project=None):
-    if project is None:
-        sql = 'SELECT * FROM environs WHERE parent_id = 0'
-    else:
-        sql = 'SELECT * FROM environs AS e1 JOIN environs AS e2 ON e1.parent_id = e2.id WHERE e1.name=%s AND e1.parent_id=0'
-    data = SQLHelper.fetch_all(sql, [project])
-    print(data)
+def environs(project='basic'):
     if request.method == 'GET':
-        return render_template('environ/detail.html', project='coasts')
-    print(request.json)
+        return render_template('environ/detail.html', project=project)
+    try:
+        data = request.json
+        Environ.where('parent_id', 0).delete()
+        data = [{
+            'name': project,
+            'key': item.get('key'),
+            'value': item.get('value'),
+            'parent_id': 0,
+            'project_id': 0
+        } for item in data]
+        Environ.insert(data)
+    except QueryException as e:
+        return make_response('fail', 500, e.args)
+    return redirect(url_for('build.index'))
+
+
+@app.route('/env_query/<string:project>')
+def env_query(project=None):
+    data = Environ.where('name', project).get().serialize()
+    return jsonify(data)
+
+
+@app.route('/test')
+def test():
+    result = Project.find_name_or_new('basic')
+    print(type(result), '------------')
     return ''
-
-
-@app.route('/')
-def basic_environs():
-    pass

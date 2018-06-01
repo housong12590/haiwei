@@ -7,7 +7,7 @@
     <div class="container">
 
         <div class="page-header">
-            <h3>{{ project |default('基础',true) }}环境变量</h3>
+            <h3>{{ project }} - 环境变量</h3>
         </div>
 
         <button type="button" id="add-item" class="btn btn-primary">添加</button>
@@ -20,11 +20,11 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">key-value</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control" id="$key$" value="MYSQL_HOST"
+                    <input type="text" class="form-control" id="$key$" value="$k_value$"
                            placeholder="key">
                 </div>
                 <div class="col-sm-6">
-                    <input type="text" class="form-control" id="$value$" value="123456"
+                    <input type="text" class="form-control" id="$value$" value="$v_value$"
                            placeholder="value">
                 </div>
                 <div class="col-sm-1">
@@ -47,14 +47,10 @@
             addTemplate();
         });
 
-        for (var i = 0; i < 5; i++) {
-            addTemplate();
-        }
-
-        function addTemplate() {
+        function addTemplate(value) {
             var template = $('#template').val();
 
-            var JSON = getTemplateData();
+            var JSON = getTemplateData(value);
             // 替换html模版中的占位符
             var html = template.temp(JSON.data);
             // 添加html到容器
@@ -70,11 +66,13 @@
             });
         }
 
-        function getTemplateData() {
+        function getTemplateData(value) {
             count++;
             return {
                 data: {
                     key: 'key-' + count,
+                    k_value: value ? value.key : '',
+                    v_value: value ? value.value : '',
                     value: 'value-' + count,
                     containerId: 'container-id-' + count,
                     deleteBtnId: 'deleteBtn-id-' + count
@@ -91,17 +89,22 @@
             });
             $.ajax({
                 type: "POST",
-                url: '{{ url_for('build.env_detail',project=project) }}',
+                url: '{{ url_for('build.environs',project=project) }}',
                 data: JSON.stringify(resultList),
                 contentType: "application/json",
                 dataType: "json",
                 complete: function (resp) {
-                    console.log(resp);
                     if (resp.status === 200) {
-                        console.log('提交成功')
+                        window.location.href = "{{ url_for('build.index') }}";
                     }
                 }
             });
+        });
+
+        $.get('{{ url_for('build.env_query',project=project) }}', function (data) {
+            data.forEach(function (value) {
+                addTemplate(value)
+            })
         });
 
     </script>
