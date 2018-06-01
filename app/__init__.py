@@ -1,7 +1,8 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect
 from flask_bootstrap import Bootstrap
 from flask_orator import Orator
 from app.helper import utc2local
+import os
 
 db = Orator()
 bootstrap = Bootstrap()
@@ -24,6 +25,7 @@ def create_app(config):
     }
     app_redirect(app)
     app.jinja_env.filters.update(template_filters)
+    configure_migrations(app)
     return app
 
 
@@ -31,6 +33,14 @@ def app_redirect(app):
     @app.route('/')
     def index():
         return redirect('/build/index')
+
+
+def configure_migrations(app):
+    databases = app.config['ORATOR_DATABASES']
+    with open('db_conf.py', 'w') as f:
+        f.write('DATABASES = ' + str(databases))
+    os.system('orator migrate -f -n -c db_conf.py')
+    os.remove('db_conf.py')
 
 
 def mysql_log_output():

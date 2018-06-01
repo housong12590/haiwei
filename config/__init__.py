@@ -1,4 +1,3 @@
-import db_conf
 import os
 
 
@@ -17,14 +16,15 @@ class Config(object):
 
     MYSQL_PWD = os.environ.get('MYSQL_PASSWORD') or 'pss123546'
 
-    ORATOR_DATABASES = db_conf.DATABASES
-
-
-class DevConfig(Config):
-    ORATOR_DATABASES = db_conf.DATABASES
-
-
-class ProConfig(Config):
-    DEBUG = False
-
-    ORATOR_DATABASES = db_conf.DATABASES
+    ORATOR_DATABASES = {
+        'default': 'mysql',
+        'mysql': {
+            'driver': 'mysql',
+            'host': MYSQL_HOST,
+            'port': int(MYSQL_PORT),
+            'database': MYSQL_DB,
+            'user': MYSQL_USER,
+            'password': MYSQL_PWD,
+            'log_queries': DEBUG
+        }
+    }

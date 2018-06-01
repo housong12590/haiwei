@@ -1,10 +1,9 @@
 from app import create_app
 from flask_script import Manager
-from config import DevConfig
+from config import Config
 
-app = create_app(DevConfig)
-# manager = Manager(app)
+app = create_app(Config)
+manager = Manager(app)
 
 if __name__ == '__main__':
-    # manager.run()
-    app.run()
+    manager.run()
