@@ -12,7 +12,7 @@ class CreateProjectsTable(Migration):
             table.string('name')
             table.string('alias').nullable()
             table.string('desc').nullable()
-            table.integer('last_img').default(0)
+            table.integer('last_image_id').default(0)
             table.timestamps()
 
     def down(self):
