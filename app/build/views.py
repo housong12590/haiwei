@@ -29,7 +29,7 @@ def record():
         project.last_image_id = image_id
         project.save()
     except QueryException as e:
-        return make_response('fail', 404, e.args)
+        return make_response('fail', 404, e.message)
     return make_response('success')
 
 
