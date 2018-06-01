@@ -8,8 +8,9 @@ class Project(Model):
     def find_name_or_new(self, query, name):
         pro = query.where('name', name).first()
         if pro is None:
-            pid = query.insert({'name': name})
-            pro = Project.find(pid)
+            pro = Project()
+            pro.name = name
+            pro.save()
         return pro
 
     def __repr__(self):

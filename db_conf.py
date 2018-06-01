@@ -4,9 +4,9 @@ DATABASES = {
         'driver': 'mysql',
         'host': '123.207.152.86',
         'port': 3306,
-        'database': 'tx_ops',
+        'database': 'tx_ops_dev',
         'user': 'root',
         'password': 'pss123546',
-        'log_queries': False
+        'log_queries': True
     }
 }

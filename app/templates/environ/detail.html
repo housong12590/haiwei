@@ -7,7 +7,7 @@
     <div class="container">
 
         <div class="page-header">
-            <h3>{{ project }} - 环境变量</h3>
+            <h3>环境变量</h3>
         </div>
 
         <button type="button" id="add-item" class="btn btn-primary">添加</button>
@@ -89,7 +89,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '{{ url_for('build.environs',project=project) }}',
+                url: window.location.href,
                 data: JSON.stringify(resultList),
                 contentType: "application/json",
                 dataType: "json",
@@ -100,12 +100,19 @@
                 }
             });
         });
-
-        $.get('{{ url_for('build.env_query',project=project) }}', function (data) {
-            data.forEach(function (value) {
-                addTemplate(value)
-            })
-        });
+        {% if env_id or project_id %}
+            var url = '';
+            {% if project_id %}
+                url = '{{ url_for('build.query_environs',project_id=project_id) }}';
+            {% else %}
+                url = '{{ url_for('build.query_environs',env_id=env_id) }}';
+            {% endif %}
+            $.get(url, function (data) {
+                data.forEach(function (value) {
+                    addTemplate(value)
+                })
+            });
+        {% endif %}
 
     </script>
 {% endblock %}

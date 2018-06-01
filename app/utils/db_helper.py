@@ -3,18 +3,19 @@ from config import Config
 
 import pymysql
 
-POOL = PooledDB(
-    creator=pymysql,  # 使用链接数据库的模块
-    maxusage=None,  # 一个链接最多被使用的次数，None表示无限制
-    setsession=[],  # 开始会话前执行的命令
-    ping=0,  # ping MySQL服务端,检查服务是否可用
-    host=Config.MYSQL_HOST,
-    port=Config.MYSQL_PORT,
-    user=Config.MYSQL_USER,
-    password=Config.MYSQL_PWD,
-    database=Config.MYSQL_DB,
-    charset='utf8mb4'
-)
+# POOL = PooledDB(
+#     creator=pymysql,  # 使用链接数据库的模块
+#     maxusage=None,  # 一个链接最多被使用的次数，None表示无限制
+#     setsession=[],  # 开始会话前执行的命令
+#     ping=0,  # ping MySQL服务端,检查服务是否可用
+#     host=Config.MYSQL_HOST,
+#     port=Config.MYSQL_PORT,
+#     user=Config.MYSQL_USER,
+#     password=Config.MYSQL_PWD,
+#     database=Config.MYSQL_DB,
+#     charset='utf8mb4'
+# )
+POOL = None
 
 
 class SQLHelper(object):
