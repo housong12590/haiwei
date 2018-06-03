@@ -1,4 +1,4 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_orator import Orator
 from app.helper import utc2local
@@ -21,7 +21,7 @@ def create_app(config):
         mysql_log_output()
 
     template_filters = {
-        'utc2local': utc2local,
+        'utc2local': utc2local
     }
     app_redirect(app)
     app.jinja_env.filters.update(template_filters)
@@ -32,7 +32,7 @@ def create_app(config):
 def app_redirect(app):
     @app.route('/')
     def index():
-        return redirect('/build/index')
+        return redirect(url_for('build.projects'))
 
 
 def configure_migrations(app):

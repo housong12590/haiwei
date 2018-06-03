@@ -1,9 +1,9 @@
-import re
+import json
 from . import build as app
-from flask import request, render_template, redirect, jsonify, json, url_for, abort
+from flask import request, render_template, redirect, url_for
 from models import Build, Environ, Project
 from orator.exceptions.query import QueryException
-from app.helper import make_response
+from app.helper import make_response, list2dict, dict2list, get_environs
 
 
 @app.route('/record', methods=['POST'])
@@ -12,115 +12,98 @@ def record():
     try:
         project = Project.find_name_or_new(name)
         build = Build.create_new(request.form)
-        project.last_image_id = build.id
+        env_dict = get_environs(build.command)
+        project.curr_tag = build.tag
+        project.change = env_dict
         project.save()
+
     except QueryException as e:
         return make_response('fail', 500, e.message)
     return make_response('success')
 
 
-@app.route('/delete_project/<int:project_id>')
-def delete_project(project_id):
+@app.route('/projects')
+def projects():
+    project_list = Project.select(Project.raw('curr_tag')).get()
+    tags = [pro.curr_tag for pro in project_list]
+    data = Build.find_by_tags(tags).get()
+    return render_template('build/project_index.html', data=data)
+
+
+@app.route('/project_delete/<int:project_id>')
+def project_delete(project_id):
     project = Project.find_or_fail(project_id)
     name = project.name
     project.delete()
-    Build.del_project(name)
+    Build.find_by_name(name).delete()
     return redirect(url_for('build.projects'))
 
 
-@app.route('/projects')
-def projects():
-    data = Project.all()
-    return render_template('build/projects.html', data=data)
+@app.route('/project_detail/<project_name>')
+def project_detail(project_name):
+    project = Project.find_by_name(project_name).first()
+    build = Build.find_by_tag(project.curr_tag).first()
+    count = Build.find_by_name(project.name).count()
+    return render_template('build/project_detail.html', project=project, build=build, count=count)
 
 
-@app.route('/index')
-def index():
-    data = Build.project_last_images().get()
-    return render_template('build/index.html', data=data)
+@app.route('/images')
+def image_all():
+    data = Build.order_by('tag', 'desc').get()
+    return render_template('build/image_list.html', data=data)
 
 
-@app.route('/images/<project>/<tag>')
-def detail(project, tag):
-    data = Build.project_detail(project, tag).first()
+@app.route('/images/<name>')
+def project_image(name):
+    data = Build.find_by_name(name).order_by('tag', 'desc').get()
+    return render_template('build/image_list.html', data=data)
+
+
+@app.route('/image/<tag>')
+def image_detail(tag):
+    data = Build.find_by_tag(tag).first()
     data.command = data.command.replace('\n', '<br/>')
-    return render_template('build/detail.html', data=data)
+    return render_template('build/image_details.html', data=data)
 
 
-@app.route('/images/<project>')
-def images(project):
-    data = Build.where('name', project).order_by('tag', 'desc').get()
-    return render_template('build/images.html', data=data)
+@app.route('/environs/index')
+def environs_index():
+    data = Environ.all()
+    return render_template('build/environ_index.html', data=data)
 
 
 @app.route('/global_environs', methods=['GET', 'POST'])
-@app.route('/global_environs/<int:env_id>', methods=['GET', 'POST'])
-def global_environs(env_id=None):
-    env_obj = Environ.find(env_id)
+@app.route('/global_environs/<int:eid>', methods=['GET', 'POST'])
+def global_environs(eid=None):
+    env_obj = Environ.find(eid)
     if request.method == 'GET':
-        return render_template('environ/detail.html', env_id=env_obj)
+        data = [{}]
+        if env_obj:
+            env_dict = json.loads(env_obj.value)
+            data = dict2list(env_dict)
+        return render_template('build/environ_global.html', data=data)
     if env_obj is None:
         env_obj = Environ()
     try:
-        env_dict = {item.get('key'): item.get('value') for item in request.json}
-        env_obj.content = json.dumps(env_dict)
+        env_dict = list2dict(request.json)
+        env_obj.value = json.dumps(env_dict, sort_keys=False)
+        env_obj.default = True
         env_obj.save()
-    except QueryException:
-        abort(404)
-    return redirect(url_for('build.index'))
+    except QueryException as e:
+        return make_response('fail', 500, e.message)
+    return make_response()
 
 
-@app.route('/project_environs/<int:project_id>', methods=['GET', 'POST'])
-def project_environs(project_id):
+@app.route('/project_environs/<pid>', methods=['GET', 'POST'])
+def project_environs(pid):
+    pro_obj = Project.find_or_fail(pid)
     if request.method == 'GET':
-        return render_template('environ/detail.html', project_id=project_id)
-    env_dict = {item.get('key'): item.get('value') for item in request.json}
+        data = dict2list(pro_obj.environs)
+        return render_template('build/environ_project.html', data=data)
     try:
-        pro_obj = Project.find(project_id)
-
-        if pro_obj.env_id == 0:
-            env_obj = Environ()
-        else:
-            env_obj = Environ.find(pro_obj.env_id)
-        env_obj.content = json.dumps(env_dict)
-        env_obj.save()
-
-        pro_obj.env_id = env_obj.id
+        env_dict = list2dict(request.json)
+        pro_obj.environs = env_dict
         pro_obj.save()
-    except QueryException:
-        abort(404)
-    return redirect(url_for('build.projects'))
-
-
-@app.route('/query_env_environs/<int:env_id>')
-@app.route('/query_project_environs/<int:project_id>')
-def query_environs(env_id=None, project_id=None):
-    if env_id:
-        env = Environ.find(env_id).serialize()
-        content = env.get('content')
-        content = json.loads(content)
-        data = [{'key': k, 'value': v} for k, v in content.items()]
-        return jsonify(data)
-    env = Environ.find(1).serialize()
-    content = env.get('content')
-    content = json.loads(content)
-    project = Project.find(project_id)
-    last_image = Build.find(project.last_image_id)
-    env_exp = re.compile(r"-e (\w*?)='?(.*?)'? ")
-    env_all = env_exp.findall(last_image.command)
-    env_dict = dict(env_all)
-    for k, v in env_dict.items():
-        if content.get(k):
-            env_dict[k] = content.get(k)
-    data = [{'key': k, 'value': v} for k, v in env_dict.items()]
-    return jsonify(data)
-
-
-@app.route('/test/<project>')
-def test(project):
-    data = Environ.where('name', project).get().serialize()
-    # last_image = Build.last_image(project)
-    # env_exp = re.compile(r"-e (\w*?)='?(.*?)'? ")
-    # env_all = env_exp.findall(last_image.command)
-    # data = [{'key': env[0], 'value': env[1]} for env in env_all]
-    return jsonify(data)
+    except QueryException as e:
+        return make_response('fail', 500, e.message)
+    return make_response()

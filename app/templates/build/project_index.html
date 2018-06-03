@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h3>构建记录</h3>
+            <h3>项目列表</h3>
             <small>ps:最近一次构建记录</small>
         </div>
         <table class="table table-bordered">
@@ -11,9 +11,9 @@
             <tr>
                 <th>#</th>
                 <th>项目名称</th>
-                <th>镜像tag</th>
+                <th>最后构建tag</th>
                 <th>内网地址</th>
-                <th>git分支</th>
+                <th>Git分支</th>
                 <th>构建时间</th>
                 <th>run命令</th>
             </tr>
@@ -23,10 +23,10 @@
                 <tr>
                     <th>{{ loop.index }}</th>
                     <td>
-                        <a href="{{ url_for('build.images',project=item.name) }}">{{ item.name }}</a>
+                        <a href="{{ url_for('build.project_detail',project_name=item.name) }}">{{ item.name }}</a>
                     </td>
                     <td>
-                        <a href="{{ url_for('build.detail',project=item.name,tag=item.tag) }}">{{ item.tag }}</a>
+                        <a href="{{ url_for('build.image_detail',tag=item.tag) }}">{{ item.tag }}</a>
                     </td>
                     <td><a href="{{ 'http://'~item.host }}" target="_blank">{{ item.host }}</a></td>
                     <td>

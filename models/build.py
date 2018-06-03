@@ -1,6 +1,6 @@
 from orator import Model
 from orator.orm import scope, accessor
-from app.helper import utc2local
+from app.helper import utc2local, get_environs
 import re
 
 
@@ -27,22 +27,33 @@ class Build(Model):
         return build
 
     @scope
-    def project_last_images(self, query):
-        builds = query.select(query.raw('max(tag) as tag')).group_by('name').get()
-        tags = [build.tag for build in builds]
-        return Build.where_in('tag', tags)
+    def find_by_name(self, query, name):
+        return query.where('name', name)
 
     @scope
-    def project_detail(self, query, name, tag):
-        return query.where('name', name).where('tag', tag)
+    def find_by_tag(self, query, tag):
+        return query.where('tag', tag)
 
-    @staticmethod
-    def del_project(name):
-        Build.where('name', name).delete()
+    @scope
+    def find_by_tags(self, query, tags: list):
+        if isinstance(tags, list):
+            return query.where_in('tag', tags)
+        else:
+            raise TypeError('tags not iterable')
 
     @scope
     def last_image(self, query, name):
-        return query.where('name', name).order_by('tag', 'desc').first()
+        return query.where('name', name).order_by('tag', 'desc')
+
+    @staticmethod
+    def environs_change(tag, env_dict):
+        build = Build.find_by_tag(tag).first()
+        if build is None:
+            return []
+        last_cmd = get_environs(build.command)
+        diff_set = set(last_cmd.items()) ^ set(env_dict.items())
+        diff_set = set(item[0] for item in diff_set)
+        return list(diff_set)
 
     @accessor
     def created_at(self):

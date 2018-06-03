@@ -1,0 +1,57 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h3 style="display: inline">{{ project.name }} - 详情</h3>
+
+            <a class="btn btn-primary" style="float: right;"
+               href="{{ url_for('build.project_image',name=project.name) }}">所有记录
+                ({{ count }})</a>
+        </div>
+
+
+        <div>
+            <div class="col-md-2">
+                <label>构建时间</label>
+            </div>
+            <div class="col-md-10">
+                <label>{{ build.created_at }}</label>
+            </div>
+        </div>
+
+        <div>
+            <div class="col-md-2">
+                <label>镜像:</label>
+            </div>
+            <div class="col-md-10">
+                <label>{{ '192.168.0.210/'~build.image_name~':' }}<span style="color: red">{{ build.tag }}</span></label>
+            </div>
+        </div>
+
+
+        <div>
+            <div class="col-md-2">
+                <label>环境变量:</label>
+            </div>
+            <div class="col-md-10">
+                {% for key,value in project.environs.items() %}
+                    {% if key in project.change %}
+                        <span style="color: red">{{ key~'='~value }}</span><br/>
+                    {% else %}
+                        <span>{{ key~'='~value }}</span><br/>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var clipboard = new ClipboardJS('.btn');
+    </script>
+{% endblock %}
+

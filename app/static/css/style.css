@@ -10,8 +10,10 @@
     margin-left: 100px;
     font-size: 20px;
     color: black;
+    display: inline;
 }
 
+
 .navbar a:hover {
- text-decoration: none;
+    text-decoration: none;
 }

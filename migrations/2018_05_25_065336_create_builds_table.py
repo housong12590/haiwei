@@ -9,11 +9,11 @@ class CreateBuildsTable(Migration):
         """
         with self.schema.create('builds') as table:
             table.increments('id')
-            table.string('name').commit('项目名称')
-            table.string('tag').commit('镜像tag')
-            table.string('branch').nullable().commit('git分支')
+            table.string('name')
+            table.string('tag')
+            table.string('branch').nullable()
             table.boolean('status').nullable().default(0)
-            table.text('command').nullable().commit('运行容器的命令')
+            table.text('command').nullable()
             table.string('host').nullable()
             table.string('port').nullable()
             table.string('notify').nullable()

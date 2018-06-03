@@ -10,8 +10,9 @@ class CreateEnvironsTable(Migration):
         with self.schema.create('environs') as table:
             table.increments('id')
             table.string('name').nullable()
-            table.text('content').nullable()
+            table.text('value').nullable()
             table.string('desc').nullable()
+            table.boolean('default').default(False)
             table.timestamps()
 
     def down(self):
