@@ -25,7 +25,8 @@
                 <label>镜像:</label>
             </div>
             <div class="col-md-10">
-                <label>{{ '192.168.0.210/'~build.image_name~':' }}<span style="color: red">{{ build.tag }}</span></label>
+                <label>{{ '192.168.0.210/'~build.image_name~':' }}<span
+                        style="color: red">{{ build.tag }}</span></label>
             </div>
         </div>
 
@@ -34,7 +35,7 @@
             <div class="col-md-2">
                 <label>环境变量:</label>
             </div>
-            <div class="col-md-10">
+            <div class="col-md-9">
                 {% for key,value in project.environs.items() %}
                     {% if key in project.change %}
                         <span style="color: red">{{ key~'='~value }}</span><br/>
@@ -42,6 +43,9 @@
                         <span>{{ key~'='~value }}</span><br/>
                     {% endif %}
                 {% endfor %}
+            </div>
+            <div class="col-md-1">
+                <a class="btn btn-primary" href="{{ url_for('build.project_environs',pid=project.id) }}">编辑</a>
             </div>
         </div>
     </div>

@@ -103,6 +103,7 @@ def project_environs(pid):
     try:
         env_dict = list2dict(request.json)
         pro_obj.environs = env_dict
+        pro_obj.change = env_dict
         pro_obj.save()
     except QueryException as e:
         return make_response('fail', 500, e.message)

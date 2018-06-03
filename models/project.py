@@ -31,12 +31,12 @@ class Project(Model):
             pro_env_dict = {}
         else:
             pro_env_dict = json.loads(self.get_raw_attribute('environs'))
-        print(pro_env_dict)
         def_dict.update(pro_env_dict)
         return def_dict
 
     @environs.mutator
-    def set_environs(self, env_dict):
+    def set_environs(self, value):
+        env_dict = value.copy()
         if not isinstance(env_dict, dict):
             raise TypeError('environ variables should be dict')
         base_dict, def_dict = self.__get_env()
@@ -75,7 +75,6 @@ class Project(Model):
         last_cmd = get_environs(build.command)
         diff_set = set(last_cmd.items()) ^ set(value.items())
         diff_set = set(item[0] for item in diff_set)
-        print(diff_set)
         value = json.dumps(list(diff_set))
         self.set_raw_attribute('change', value)
 
