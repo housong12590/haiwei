@@ -74,8 +74,10 @@ def image_detail(tag):
 
 @app.route('/environs/index')
 def environs_index():
-    data = Environ.all()
-    return render_template('build/environ_index.html', data=data)
+    data = Environ.first()
+    # return render_template('build/environ_index.html', data=data)
+    data = json.loads(data.value)
+    return render_template('build/environ_index1.html', data=data)
 
 
 @app.route('/global_environs', methods=['GET', 'POST'])

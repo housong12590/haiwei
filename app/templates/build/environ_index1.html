@@ -1,0 +1,19 @@
+{% extends '_base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="page-header">
+            <h3 style="display: inline">全局变量({{ data|length }})</h3>
+
+            <a href="{{ url_for('build.global_environs',eid=1) }}" style="float: right" class="btn btn-primary">编辑</a>
+        </div>
+
+        {% for key,value in data.items() %}
+            <h5>{{ key }}={{ value }}</h5>
+        {% endfor %}
+
+
+    </div>
+
+{% endblock %}
