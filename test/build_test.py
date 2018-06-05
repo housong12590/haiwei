@@ -17,3 +17,7 @@ temp = []
 
 result = json.dumps(temp)
 print(result)
+
+
+result = bool('asdf123')
+print(result)

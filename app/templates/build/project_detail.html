@@ -38,7 +38,7 @@
             <div class="col-md-9">
                 {% for key,value in project.environs.items() %}
                     {% if key in project.change %}
-                        <span style="color: red">{{ key~'='~value }}</span><br/>
+                        <strong style="color: red">{{ key~'='~value }}</strong><br/>
                     {% else %}
                         <span>{{ key~'='~value }}</span><br/>
                     {% endif %}

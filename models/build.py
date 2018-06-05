@@ -12,14 +12,13 @@ class Build(Model):
         build = Build()
         build.name = form.get('name')
         build.tag = form.get('tag')
-        build.status = bool(form.get('status'))
         build.branch = form.get('branch')
         build.host = form.get('host')
         build.port = form.get('port')
         build.notify = form.get('notify')
         build.command = re.sub(r'(-[vpe])', r'\\\n\1', form.get('command'))
         build.image_name = form.get('image_name')
-        build.send = bool(form.get('tag'))
+        build.send = bool(form.get('send'))
         build.dockerfile = form.get('dockerfile')
         build.code_registry = form.get('code_registry')
         build.message = form.get('message')
@@ -44,6 +43,10 @@ class Build(Model):
     @scope
     def last_image(self, query, name):
         return query.where('name', name).order_by('tag', 'desc')
+
+    @scope
+    def last_deploy_image(self, query, name):
+        return query.where('name', name).where('status', 2).order_by('tag', 'desc').frist()
 
     @staticmethod
     def environs_change(tag, env_dict):

@@ -12,7 +12,7 @@ class CreateBuildsTable(Migration):
             table.string('name')
             table.string('tag')
             table.string('branch').nullable()
-            table.boolean('status').nullable().default(0)
+            table.integer('status').default(0)  # 0:不需要部署 1:等待部署 2:部署成功 3:部署失败
             table.text('command').nullable()
             table.string('host').nullable()
             table.string('port').nullable()

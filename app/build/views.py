@@ -4,6 +4,9 @@ from flask import request, render_template, redirect, url_for
 from models import Build, Environ, Project
 from orator.exceptions.query import QueryException
 from app.helper import make_response, list2dict, dict2list, get_environs
+from flask_paginate import Pagination, get_page_parameter
+
+per_page = 15
 
 
 @app.route('/record', methods=['POST'])
@@ -24,15 +27,15 @@ def record():
 
 @app.route('/projects')
 def projects():
-    project_list = Project.select(Project.raw('curr_tag')).get()
+    project_list = Project.select(Project.raw('curr_tag')).order_by('created_at').get()
     tags = [pro.curr_tag for pro in project_list]
     data = Build.find_by_tags(tags).get()
     return render_template('build/project_index.html', data=data)
 
 
-@app.route('/project_delete/<int:project_id>')
-def project_delete(project_id):
-    project = Project.find_or_fail(project_id)
+@app.route('/project_delete/<int:pid>')
+def project_delete(pid):
+    project = Project.find_or_fail(pid)
     name = project.name
     project.delete()
     Build.find_by_name(name).delete()
@@ -49,14 +52,18 @@ def project_detail(project_name):
 
 @app.route('/images')
 def image_all():
-    data = Build.order_by('tag', 'desc').get()
-    return render_template('build/image_list.html', data=data)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    pagination = Pagination(page=page, per_page=per_page, total=Build.count(), bs_version=3)
+    data = Build.order_by('tag', 'desc').paginate(per_page, page)
+    return render_template('build/image_list.html', data=data, pagination=pagination)
 
 
 @app.route('/images/<name>')
 def project_image(name):
-    data = Build.find_by_name(name).order_by('tag', 'desc').get()
-    return render_template('build/image_list.html', data=data)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    pagination = Pagination(page=page, per_page=per_page, total=Build.count(), bs_version=3)
+    data = Build.find_by_name(name).order_by('tag', 'desc').paginate(per_page, page)
+    return render_template('build/image_list.html', data=data, pagination=pagination)
 
 
 @app.route('/image/<tag>')
@@ -99,7 +106,7 @@ def project_environs(pid):
     pro_obj = Project.find_or_fail(pid)
     if request.method == 'GET':
         data = dict2list(pro_obj.environs)
-        return render_template('build/environ_project.html', data=data)
+        return render_template('build/environ_project.html', project=pro_obj, data=data)
     try:
         env_dict = list2dict(request.json)
         pro_obj.environs = env_dict

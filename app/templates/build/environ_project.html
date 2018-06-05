@@ -102,7 +102,11 @@
                 dataType: "json",
                 complete: function (resp) {
                     if (resp.status === 200) {
-                        window.location.href = "{{ url_for('build.projects') }}";
+                        if (document.referrer === '') {
+                            window.location.href = "{{ url_for('build.projects') }}";
+                        } else {
+                            window.location.href = document.referrer
+                        }
                     }
                 }
             });
