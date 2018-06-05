@@ -49,7 +49,7 @@
                                 <li><a href="{{ url_for('build.project_detail',name=item.name) }}">项目详情</a></li>
                                 <li><a href="{{ url_for('build.project_image',name=item.name) }}">镜像列表</a></li>
                                 {#                                <li role="separator" class="divider"></li>#}
-                                {#                                <li><a href="{{ url_for('build.project_delete',pid=item.id) }}">删除项目</a></li>#}
+                                {#                                <li><a href="{{ url_for('build.project_delete',name=item.name) }}">删除项目</a></li>#}
                                 <li role="separator" class="divider"></li>
                                 <li><a href="{{ url_for('build.project_environs',name=item.name) }}">环境变量</a></li>
                             </ul>

@@ -33,11 +33,9 @@ def projects():
     return render_template('build/project_index.html', data=data)
 
 
-@app.route('/project_delete/<int:pid>')
-def project_delete(pid):
-    project = Project.find_or_fail(pid)
-    name = project.name
-    project.delete()
+@app.route('/project_delete/<name>')
+def project_delete(name):
+    Project.find_by_name(name).delete()
     Build.find_by_name(name).delete()
     return redirect(url_for('build.projects'))
 
