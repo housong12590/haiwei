@@ -72,11 +72,12 @@ class Project(Model):
         build = Build.find_by_tag(self.last_tag).first() if hasattr(self, 'last_tag') else None
         if build is None:
             self.set_raw_attribute('change', json.dumps(list([])))
-        last_cmd = get_environs(build.command)
-        diff_set = set(last_cmd.items()) ^ set(value.items())
-        diff_set = set(item[0] for item in diff_set)
-        value = json.dumps(list(diff_set))
-        self.set_raw_attribute('change', value)
+        else:
+            last_cmd = get_environs(build.command)
+            diff_set = set(last_cmd.items()) ^ set(value.items())
+            diff_set = set(item[0] for item in diff_set)
+            value = json.dumps(list(diff_set))
+            self.set_raw_attribute('change', value)
 
     def __get_env(self):
         build_obj = Build.find_by_tag(self.curr_tag).first()
