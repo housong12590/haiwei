@@ -42,9 +42,9 @@ def project_delete(pid):
     return redirect(url_for('build.projects'))
 
 
-@app.route('/project_detail/<project_name>')
-def project_detail(project_name):
-    project = Project.find_by_name(project_name).first()
+@app.route('/project_detail/<name>')
+def project_detail(name):
+    project = Project.find_by_name(name).first()
     build = Build.find_by_tag(project.curr_tag).first()
     count = Build.find_by_name(project.name).count()
     return render_template('build/project_detail.html', project=project, build=build, count=count)
@@ -102,9 +102,9 @@ def global_environs(eid=None):
     return make_response()
 
 
-@app.route('/project_environs/<pid>', methods=['GET', 'POST'])
-def project_environs(pid):
-    pro_obj = Project.find_or_fail(pid)
+@app.route('/project_environs/<name>', methods=['GET', 'POST'])
+def project_environs(name):
+    pro_obj = Project.find_by_name(name).first()
     if request.method == 'GET':
         data = dict2list(pro_obj.environs)
         return render_template('build/environ_project.html', project=pro_obj, data=data)

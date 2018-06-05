@@ -28,7 +28,7 @@
                 <tr>
                     <th>{{ loop.index }}</th>
                     <td>
-                        <a href="{{ url_for('build.project_detail',project_name=item.name) }}">{{ item.name }}</a>
+                        <a href="{{ url_for('build.project_detail',name=item.name) }}">{{ item.name }}</a>
                     </td>
                     <td>
                         <strong>{{ item.tag }}</strong>
@@ -45,13 +45,13 @@
                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             </span>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('build.project_detail',project_name=item.name) }}">部署</a></li>
-                                <li><a href="{{ url_for('build.project_detail',project_name=item.name) }}">项目详情</a></li>
+                                <li><a href="{{ url_for('build.project_detail',name=item.name) }}">部署</a></li>
+                                <li><a href="{{ url_for('build.project_detail',name=item.name) }}">项目详情</a></li>
                                 <li><a href="{{ url_for('build.project_image',name=item.name) }}">镜像列表</a></li>
                                 {#                                <li role="separator" class="divider"></li>#}
                                 {#                                <li><a href="{{ url_for('build.project_delete',pid=item.id) }}">删除项目</a></li>#}
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{{ url_for('build.project_environs',pid=item.id) }}">环境变量</a></li>
+                                <li><a href="{{ url_for('build.project_environs',name=item.name) }}">环境变量</a></li>
                             </ul>
                         </div>
                     </td>
