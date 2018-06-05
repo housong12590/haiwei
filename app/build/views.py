@@ -61,8 +61,9 @@ def image_all():
 @app.route('/images/<name>')
 def project_image(name):
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    pagination = Pagination(page=page, per_page=per_page, total=Build.count(), bs_version=3)
-    data = Build.find_by_name(name).order_by('tag', 'desc').paginate(per_page, page)
+    data = Build.find_by_name(name)
+    pagination = Pagination(page=page, per_page=per_page, total=data.count(), bs_version=3)
+    data = data.order_by('tag', 'desc').paginate(per_page, page)
     return render_template('build/image_list.html', data=data, pagination=pagination)
 
 
