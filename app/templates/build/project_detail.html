@@ -3,51 +3,115 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h3 style="display: inline">{{ project.desc }} - 详情</h3>
+            <h3 style="display: inline">{{ project.desc }} </h3>
 
-{#            <a class="btn btn-primary" style="float: right;"#}
-{#               href="{{ url_for('build.project_image',name=project.name) }}">所有记录#}
-{#                ({{ count }})</a>#}
         </div>
 
 
+        <div class="col-md-2">
+            <label>绑定镜像</label>
+        </div>
+
+        <div class="col-md-9">
+            <select class="form-control" id="image_name">
+                <option value="">---请选择---</option>
+                {% for image in images %}
+                    <option value="{{ image }}" {{ 'selected' if project.image_name==image else '' }}>{{ image }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-1">
+            <button id="bind_project" class="btn btn-primary">保存</button>
+        </div>
+
+        <div class="col-md-12">
+            <p></p>
+        </div>
+        <div class="col-md-12">
+            <p></p>
+        </div>
         <div>
             <div class="col-md-2">
-                <label>构建时间</label>
+                <label>最后构建时间</label>
             </div>
             <div class="col-md-10">
-                <label>{{ project.created_at }}</label>
+                <p>{{ project.created_at|utc2local }}</p>
             </div>
         </div>
-
-        <div>
-            <div class="col-md-2">
-                <label>镜像:</label>
-            </div>
-            <div class="col-md-10">
-                <label>{{ '192.168.0.210/'~project.image.image_name~':' }}<span
-                        style="color: red">{{ project.tag }}</span></label>
-            </div>
+        <div class="col-md-12">
+            <p></p>
         </div>
 
+        {% if project.image %}
+            <div>
+                <div class="col-md-2">
+                    <label>最新镜像:</label>
+                </div>
+                <div class="col-md-10">
+                    {% set dev_212_link = 'registry.jiankanghao.net/'~project.image.image_name~':'~project.image.tag %}
+                    <span style="color: green">{{ dev_212_link }}</span>
+                    <button class="btn btn-primary btn-xs" data-clipboard-text="{{ dev_212_link }}">复制</button>
+                </div>
+            </div>
 
-        <div>
-            <div class="col-md-2">
-                <label>环境变量:</label>
+            <div class="col-md-12">
+                <p></p>
             </div>
-{#            <div class="col-md-9">#}
-{#                {% for key,value in project.environs.items() %}#}
-{#                    {% if key in project.change %}#}
-{#                        <strong style="color: red">{{ key~'='~value }}</strong><br/>#}
-{#                    {% else %}#}
-{#                        <span>{{ key~'='~value }}</span><br/>#}
-{#                    {% endif %}#}
-{#                {% endfor %}#}
-{#            </div>#}
-            <div class="col-md-1">
-                <a class="btn btn-primary" href="{{ url_for('build.project_environs',name=project.name) }}">编辑</a>
+
+            <div>
+                <div class="col-md-2">
+                    <label>开发环境地址(212)</label>
+                </div>
+                <div class="col-md-10">
+                    <p><a href="http://{{ project.image.host }}" target="_blank">{{ project.image.host }}</a></p>
+                </div>
             </div>
-        </div>
+            <div class="col-md-12">
+                <p></p>
+            </div>
+
+            <div>
+                <div class="col-md-2">
+                    <label>测试环境地址(k8s)</label>
+                </div>
+                <div class="col-md-10">
+                    <p><a href="http://None" target="_blank">None</a></p>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <p></p>
+            </div>
+
+            <div>
+                <div class="col-md-2">
+                    <label>生产环境地址(k8s)</label>
+                </div>
+                <div class="col-md-10">
+                    <p><a href="http://None" target="_blank">None</a></p>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <p></p>
+            </div>
+
+            <div>
+                <div class="col-md-2">
+                    <label>环境变量</label>
+                </div>
+                <div class="col-md-10">
+                    {% set environs = project.image.command|get_environs %}
+                    {% for k,v in environs.items() %}
+                        <p>{{ k }}={{ v }}</p>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        {% endif %}
+
+
     </div>
 
 {% endblock %}
@@ -55,6 +119,18 @@
 {% block scripts %}
     {{ super() }}
     <script>
+        $('#bind_project').click(function () {
+            var image_name = $('#image_name option:selected').val();
+            data = {
+                image_name: image_name,
+                project_id: {{ project.id }}
+            };
+            $.post('{{ url_for('build.project_bind') }}', data, function (resp) {
+                if (resp.status_code == 200) {
+                    alert('修改成功')
+                }
+            })
+        });
         var clipboard = new ClipboardJS('.btn');
     </script>
 {% endblock %}

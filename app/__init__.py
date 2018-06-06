@@ -1,7 +1,7 @@
 from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_orator import Orator
-from app.helper import utc2local
+from app.helper import utc2local, get_environs
 import os
 
 db = Orator()
@@ -21,7 +21,8 @@ def create_app(config):
         mysql_log_output()
 
     template_filters = {
-        'utc2local': utc2local
+        'utc2local': utc2local,
+        'get_environs': get_environs
     }
     app_redirect(app)
     app.jinja_env.filters.update(template_filters)

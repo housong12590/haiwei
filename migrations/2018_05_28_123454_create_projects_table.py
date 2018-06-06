@@ -12,10 +12,8 @@ class CreateProjectsTable(Migration):
             table.string('name')
             table.string('desc').nullable()
             table.string('image_name').nullable()
-            table.string('curr_tag').nullable()
             table.string('last_tag').nullable()
-            table.text('environs').nullable()
-            table.text('change').nullable()
+            table.string('address').nullable()
             table.timestamps()
 
     def down(self):

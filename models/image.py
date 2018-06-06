@@ -29,8 +29,6 @@ class Image(Model):
 
     @scope
     def find_by_tag(self, query, tag):
-        if tag is None:
-            return None
         return query.where('tag', tag).first()
 
     @scope
@@ -56,3 +54,6 @@ class Image(Model):
     @scope
     def find_last_image(self, query, name):
         return query.where('name', name).order_by('tag', 'desc').first()
+
+    def __repr__(self):
+        return self.to_json()

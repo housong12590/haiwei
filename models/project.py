@@ -15,15 +15,6 @@ class Project(Model):
     def find_by_image_name(self, query, name):
         return query.where('image_name', name)
 
-    @scope
-    def find_name_or_new(self, query, name):
-        pro = query.where('name', name).first()
-        if pro is None:
-            pro = Project()
-            pro.name = name
-            pro.save()
-        return pro
-
     @accessor
     def environs(self) -> dict:
         base_dict, def_dict = self.__get_env()

@@ -14,10 +14,11 @@ per_page = 15
 def record():
     name = request.form.get('name')
     try:
-        build = Build.create_new(request.form)
-        project = Project.find_by_image_name(name)
+        image = Image.create_new(request.form)
+        project = Project.find_by_image_name(name).first()
         if project:
-            project.last_tag = build.id
+            print(project)
+            project.last_tag = image.tag
             project.save()
     except QueryException as e:
         return make_response('fail', 500, e.message)
@@ -47,7 +48,10 @@ def projects():
     data = Project.all()
     for item in data:
         image_tag = item.last_tag
-        item.image = Image.find_by_tag(image_tag)
+        if image_tag:
+            item.image = Image.find_by_tag(image_tag)
+        else:
+            item.image = None
     return render_template('build/project_index.html', projects=data)
 
 
@@ -63,9 +67,42 @@ def project_delete(project_id):
 @app.route('/project_detail/<project_id>')
 def project_detail(project_id):
     project = Project.find(project_id)
-    image = Image.find_last_image(project.image_name)
+    if project.last_tag:
+        image = Image.find_by_tag(project.last_tag)
+    else:
+        image = None
     project.image = image
-    return render_template('build/project_detail.html', project=project)
+    images = Image.group_by('name').lists('name')
+    return render_template('build/project_detail.html', project=project, images=images)
+
+
+@app.route('/project_bind', methods=['POST'])
+def project_bind():
+    try:
+        project_id = request.form.get('project_id')
+        image_name = request.form.get('image_name')
+        project = Project.find(project_id)
+        if image_name is '':
+            project.image_name = None
+            project.last_tag = None
+        else:
+            project.image_name = image_name
+            image = Image.find_last_image(image_name)
+            project.last_tag = image.tag
+        project.save()
+    except QueryException as e:
+        return make_response(msg=e.message, status_code=500)
+    return make_response()
+
+
+@app.route('/deploy_dev/<project_id>')
+def deploy_dev(project_id):
+    return project_id
+
+
+@app.route('/deploy_pro/<project_id>')
+def deploy_pro(project_id):
+    return project_id
 
 
 @app.route('/images')
