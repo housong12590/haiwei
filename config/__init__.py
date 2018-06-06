@@ -28,3 +28,11 @@ class Config(object):
             'log_queries': DEBUG
         }
     }
+
+    project_list = 'http://192.168.0.240:30016/'
+
+    dd = 'http://192.168.0.240:30016/products'
+    data = {
+        'id': '',
+        'image': ''
+    }
