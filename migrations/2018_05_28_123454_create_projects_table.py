@@ -8,10 +8,10 @@ class CreateProjectsTable(Migration):
         Run the migrations.
         """
         with self.schema.create('projects') as table:
-            table.increments('id')
+            table.integer('id', unsigned=False)
             table.string('name')
-            table.string('alias').nullable()
             table.string('desc').nullable()
+            table.string('image_name').nullable()
             table.string('curr_tag').nullable()
             table.string('last_tag').nullable()
             table.text('environs').nullable()

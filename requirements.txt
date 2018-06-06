@@ -6,3 +6,4 @@ Flask-Orator==0.2.0
 Flask-Script==2.0.6
 DBUtils==1.2
 Flask-paginate==0.5.1
+requests==2.18.4

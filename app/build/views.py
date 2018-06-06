@@ -1,10 +1,11 @@
 import json
 from . import build as app
 from flask import request, render_template, redirect, url_for
-from models import Build, Environ, Project
+from models import Build, Environ, Project, Image
 from orator.exceptions.query import QueryException
 from app.helper import make_response, list2dict, dict2list, get_environs
 from flask_paginate import Pagination, get_page_parameter
+import requests
 
 per_page = 15
 
@@ -13,39 +14,58 @@ per_page = 15
 def record():
     name = request.form.get('name')
     try:
-        project = Project.find_name_or_new(name)
         build = Build.create_new(request.form)
-        env_dict = get_environs(build.command)
-        project.curr_tag = build.tag
-        project.change = env_dict
-        project.save()
-
+        project = Project.find_by_image_name(name)
+        if project:
+            project.last_tag = build.id
+            project.save()
     except QueryException as e:
         return make_response('fail', 500, e.message)
     return make_response('success')
 
 
-@app.route('/projects')
-def projects():
-    project_list = Project.select(Project.raw('curr_tag')).order_by('created_at').get()
-    tags = [pro.curr_tag for pro in project_list]
-    data = Build.find_by_tags(tags).get()
-    return render_template('build/project_index.html', data=data)
-
-
-@app.route('/project_delete/<name>')
-def project_delete(name):
-    Project.find_by_name(name).delete()
-    Build.find_by_name(name).delete()
+@app.route('/pull')
+def pull():
+    result = requests.get('http://192.168.0.240:30016/')
+    if result.status_code == 200:
+        data = json.loads(result.text, encoding='utf8')
+        project_data = []
+        for k, v in data.items():
+            project = Project.find(k)
+            if project is None:
+                project = Project()
+            project.id = k
+            project.name = v.get('name')
+            project.desc = v.get('desc')
+            project.save()
+        Project.insert(project_data)
     return redirect(url_for('build.projects'))
 
 
-@app.route('/project_detail/<name>')
-def project_detail(name):
-    project = Project.find_by_name(name).first()
-    build = Build.find_by_tag(project.curr_tag).first()
-    count = Build.find_by_name(project.name).count()
-    return render_template('build/project_detail.html', project=project, build=build, count=count)
+@app.route('/projects')
+def projects():
+    data = Project.all()
+    for item in data:
+        image_tag = item.last_tag
+        item.image = Image.find_by_tag(image_tag)
+    return render_template('build/project_index.html', projects=data)
+
+
+@app.route('/project_delete/<project_id>')
+def project_delete(project_id):
+    project = Project.find(project_id)
+    image_name = project.image_name
+    Image.find_by_name(image_name).delete()
+    project.delete()
+    return redirect(url_for('build.projects'))
+
+
+@app.route('/project_detail/<project_id>')
+def project_detail(project_id):
+    project = Project.find(project_id)
+    image = Image.find_last_image(project.image_name)
+    project.image = image
+    return render_template('build/project_detail.html', project=project)
 
 
 @app.route('/images')

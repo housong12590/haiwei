@@ -10,7 +10,7 @@ class Config(object):
 
     MYSQL_PORT = int(os.environ.get('MYSQL_PORT') or 3306)
 
-    MYSQL_DB = os.environ.get('MYSQL_DB') or 'tx_ops_dev'
+    MYSQL_DB = os.environ.get('MYSQL_DB') or 'kx_ops_dev'
 
     MYSQL_USER = os.environ.get('MYSQL_USER') or 'root'
 

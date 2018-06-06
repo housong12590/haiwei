@@ -31,7 +31,9 @@ class Build(Model):
 
     @scope
     def find_by_tag(self, query, tag):
-        return query.where('tag', tag)
+        if tag is None:
+            return None
+        return query.where('tag', tag).first()
 
     @scope
     def find_by_tags(self, query, tags: list):

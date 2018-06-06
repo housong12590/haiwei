@@ -3,11 +3,11 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h3 style="display: inline">{{ project.name }} - 详情</h3>
+            <h3 style="display: inline">{{ project.desc }} - 详情</h3>
 
-            <a class="btn btn-primary" style="float: right;"
-               href="{{ url_for('build.project_image',name=project.name) }}">所有记录
-                ({{ count }})</a>
+{#            <a class="btn btn-primary" style="float: right;"#}
+{#               href="{{ url_for('build.project_image',name=project.name) }}">所有记录#}
+{#                ({{ count }})</a>#}
         </div>
 
 
@@ -16,7 +16,7 @@
                 <label>构建时间</label>
             </div>
             <div class="col-md-10">
-                <label>{{ build.created_at }}</label>
+                <label>{{ project.created_at }}</label>
             </div>
         </div>
 
@@ -25,8 +25,8 @@
                 <label>镜像:</label>
             </div>
             <div class="col-md-10">
-                <label>{{ '192.168.0.210/'~build.image_name~':' }}<span
-                        style="color: red">{{ build.tag }}</span></label>
+                <label>{{ '192.168.0.210/'~project.image.image_name~':' }}<span
+                        style="color: red">{{ project.tag }}</span></label>
             </div>
         </div>
 
@@ -35,15 +35,15 @@
             <div class="col-md-2">
                 <label>环境变量:</label>
             </div>
-            <div class="col-md-9">
-                {% for key,value in project.environs.items() %}
-                    {% if key in project.change %}
-                        <strong style="color: red">{{ key~'='~value }}</strong><br/>
-                    {% else %}
-                        <span>{{ key~'='~value }}</span><br/>
-                    {% endif %}
-                {% endfor %}
-            </div>
+{#            <div class="col-md-9">#}
+{#                {% for key,value in project.environs.items() %}#}
+{#                    {% if key in project.change %}#}
+{#                        <strong style="color: red">{{ key~'='~value }}</strong><br/>#}
+{#                    {% else %}#}
+{#                        <span>{{ key~'='~value }}</span><br/>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#            </div>#}
             <div class="col-md-1">
                 <a class="btn btn-primary" href="{{ url_for('build.project_environs',name=project.name) }}">编辑</a>
             </div>

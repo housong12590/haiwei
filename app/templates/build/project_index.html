@@ -15,43 +15,48 @@
             <tr>
                 <th>#</th>
                 <th>项目名称</th>
-                <th>镜像tag</th>
                 <th>内网地址</th>
+                <th>镜像名称</th>
+                <th>镜像tag</th>
                 <th>Git分支</th>
-                <th>部署状态</th>
                 <th>构建时间</th>
                 <th>菜单</th>
             </tr>
             </thead>
             <tbody>
-            {% for item in data %}
+            {% for project in projects %}
                 <tr>
-                    <th>{{ loop.index }}</th>
+                    <th>{{ project.id }}</th>
                     <td>
-                        <a href="{{ url_for('build.project_detail',name=item.name) }}">{{ item.name }}</a>
+                        <a href="{{ url_for('build.project_detail',project_id=project.id) }}">{{ project.desc }}</a>
                     </td>
                     <td>
-                        <strong>{{ item.tag }}</strong>
+                        <a href="{{ 'http://'~project.image.host }}"
+                           target="_blank">{{ project.image.host }}</a>
                     </td>
-                    <td><a href="{{ 'http://'~item.host }}" target="_blank">{{ item.host }}</a></td>
-                    <td>
-                        <span class="label {{ 'label-warning' if item.branch == 'develop' else 'label-primary' }}">{{ item.branch }}</span>
-                    </td>
-                    <td>None</td>
-                    <td>{{ item.created_at }}</td>
+                    <td>{{ project.image.name }}</td>
+                    <td>{{ project.image.tag }}</td>
+                    <td>{{ project.image.git_branch }}</td>
+                    <td>{{ project.created_at | utc2local }}</td>
                     <td>
                         <div class="dropdown">
                             <span class="glyphicon glyphicon-cog btn btn-primary btn-xs dropdown-toggle"
                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             </span>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('build.project_detail',name=item.name) }}">部署</a></li>
-                                <li><a href="{{ url_for('build.project_detail',name=item.name) }}">项目详情</a></li>
-                                <li><a href="{{ url_for('build.project_image',name=item.name) }}">镜像列表</a></li>
-                                {#                                <li role="separator" class="divider"></li>#}
-                                {#                                <li><a href="{{ url_for('build.project_delete',name=item.name) }}">删除项目</a></li>#}
+                                <li>
+                                    <a href="{{ url_for('build.project_detail',project_id=project.id) }}">部署</a>
+                                </li>
+                                <li>
+                                    <a href="{{ url_for('build.project_detail',project_id=project.id) }}">项目详情</a>
+                                </li>
+                                <li>
+{#                                    <a href="{{ url_for('build.project_image',image_name=project.image.name) }}">镜像列表</a>#}
+                                </li>
                                 <li role="separator" class="divider"></li>
-                                <li><a href="{{ url_for('build.project_environs',name=item.name) }}">环境变量</a></li>
+                                <li>
+{#                                    <a href="{{ url_for('build.project_environs',project_id=project.id) }}">环境变量</a>#}
+                                </li>
                             </ul>
                         </div>
                     </td>

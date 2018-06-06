@@ -9,7 +9,11 @@ class Project(Model):
 
     @scope
     def find_by_name(self, query, name):
-        return query.where('name', name)
+        return query.where('name', name).get()
+
+    @scope
+    def find_by_image_name(self, query, name):
+        return query.where('image_name', name)
 
     @scope
     def find_name_or_new(self, query, name):
@@ -41,7 +45,8 @@ class Project(Model):
             raise TypeError('environ variables should be dict')
         base_dict, def_dict = self.__get_env()
         for key in list(env_dict.keys()):
-            if env_dict[key] == base_dict.get(key) or env_dict[key] == def_dict.get(key) or key is None:
+            if env_dict[key] == base_dict.get(key) or env_dict[key] == def_dict.get(
+                    key) or key is None:
                 del env_dict[key]
         value = json.dumps(env_dict, sort_keys=False)
         self.set_raw_attribute('environs', value)
@@ -62,22 +67,22 @@ class Project(Model):
         self.set_raw_attribute('last_tag', last_tag)
         self.set_raw_attribute('curr_tag', value)
 
-    @accessor
-    def change(self):
-        change_env = self.get_raw_attribute('change')
-        return json.loads(change_env)
-
-    @change.mutator
-    def set_change(self, value: dict):
-        build = Build.find_by_tag(self.last_tag).first() if hasattr(self, 'last_tag') else None
-        if build is None:
-            self.set_raw_attribute('change', json.dumps(list([])))
-        else:
-            last_cmd = get_environs(build.command)
-            diff_set = set(last_cmd.items()) ^ set(value.items())
-            diff_set = set(item[0] for item in diff_set)
-            value = json.dumps(list(diff_set))
-            self.set_raw_attribute('change', value)
+    # @accessor
+    # def change(self):
+    #     change_env = self.get_raw_attribute('change')
+    #     return json.loads(change_env)
+    #
+    # @change.mutator
+    # def set_change(self, value: dict):
+    #     build = Build.find_by_tag(self.last_tag).first() if hasattr(self, 'last_tag') else None
+    #     if build is None:
+    #         self.set_raw_attribute('change', json.dumps(list([])))
+    #     else:
+    #         last_cmd = get_environs(build.command)
+    #         diff_set = set(last_cmd.items()) ^ set(value.items())
+    #         diff_set = set(item[0] for item in diff_set)
+    #         value = json.dumps(list(diff_set))
+    #         self.set_raw_attribute('change', value)
 
     def __get_env(self):
         build_obj = Build.find_by_tag(self.curr_tag).first()
