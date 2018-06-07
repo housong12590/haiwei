@@ -29,10 +29,10 @@ class Config(object):
         }
     }
 
-    project_list = 'http://192.168.0.240:30016/'
+    PROJECT_LIST = 'http://192.168.0.240:30016/'
 
-    dd = 'http://192.168.0.240:30016/products'
-    data = {
-        'id': '',
-        'image': ''
-    }
+    # 开发环境k8s部署url
+    DEPLOY_DEV_URL = 'http://192.168.0.240:30016/products'
+
+    # 生产环境k8s部署url
+    DEPLOY_PRO_URL = 'http://192.168.0.240:30016/products'

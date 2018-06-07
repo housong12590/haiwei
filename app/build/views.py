@@ -3,8 +3,10 @@ from . import build as app
 from flask import request, render_template, redirect, url_for
 from models import Build, Environ, Project, Image
 from orator.exceptions.query import QueryException
-from app.helper import make_response, list2dict, dict2list, get_environs
+from app.helper import make_response, list2dict, dict2list
 from flask_paginate import Pagination, get_page_parameter
+from config import Config
+from . import deploy_k8s
 import requests
 
 per_page = 15
@@ -17,7 +19,6 @@ def record():
         image = Image.create_new(request.form)
         project = Project.find_by_image_name(name).first()
         if project:
-            print(project)
             project.last_tag = image.tag
             project.save()
     except QueryException as e:
@@ -97,12 +98,14 @@ def project_bind():
 
 @app.route('/deploy_dev/<project_id>')
 def deploy_dev(project_id):
-    return project_id
+    dev_url = Config.DEPLOY_DEV_URL
+    return deploy_k8s.deploy(dev_url, project_id)
 
 
 @app.route('/deploy_pro/<project_id>')
 def deploy_pro(project_id):
-    return project_id
+    pro_url = Config.DEPLOY_PRO_URL
+    return deploy_k8s.deploy(pro_url, project_id)
 
 
 @app.route('/images')
