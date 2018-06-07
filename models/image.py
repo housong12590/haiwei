@@ -8,20 +8,20 @@ class Image(Model):
 
     @staticmethod
     def create_new(form):
-        image = Image()
-        image.name = form.get('name')
-        image.tag = form.get('tag')
-        image.host = form.get('host')
-        image.port = form.get('port')
-        image.notify = form.get('notify')
-        image.command = re.sub(r'(-[vpe])', r'\\\n\1', form.get('command'))
-        image.image_name = form.get('image_name')
-        image.git_branch = form.get('branch')
-        image.git_message = form.get('message')
-        image.code_registry = form.get('code_registry')
-        # image.dockerfile = form.get('dockerfile')
-        image.save()
-        return image
+        result = Image.insert({
+            'name': form.get('name'),
+            'tag': form.get('tag'),
+            'host': form.get('host'),
+            'port': form.get('port'),
+            'notify': form.get('notify'),
+            'command': re.sub(r'(-[vpe])', r'\\\n\1', form.get('command')),
+            'image_name': form.get('image_name'),
+            'git_branch': form.get('branch'),
+            'git_message': form.get('message'),
+            'code_registry': form.get('code_registry'),
+            'dockerfile': form.get('dockerfile')
+        })
+        return result
 
     @scope
     def find_by_name(self, query, name):

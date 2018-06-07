@@ -16,11 +16,14 @@ per_page = 15
 def record():
     name = request.form.get('name')
     try:
-        image = Image.create_new(request.form)
-        project = Project.find_by_image_name(name).first()
-        if project:
-            project.last_tag = image.tag
-            project.save()
+        result = Image.create_new(request.form)
+        if result:
+            project = Project.find_by_image_name(name).first()
+            if project:
+                project.last_tag = request.form.get('tag')
+                project.save()
+        else:
+            return make_response('fail', 500, 'image insert fail')
     except QueryException as e:
         return make_response('fail', 500, e.message)
     return make_response('success')
@@ -28,7 +31,7 @@ def record():
 
 @app.route('/pull')
 def pull():
-    result = requests.get('http://192.168.0.240:30016/')
+    result = requests.get(Config.PROJECT_LIST)
     if result.status_code == 200:
         data = json.loads(result.text, encoding='utf8')
         project_data = []
