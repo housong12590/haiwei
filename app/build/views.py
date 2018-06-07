@@ -1,7 +1,7 @@
 import json
 from . import build as app
 from flask import request, render_template, redirect, url_for
-from models import Build, Environ, Project, Image
+from models import Environ, Project, Image
 from orator.exceptions.query import QueryException
 from app.helper import make_response, list2dict, dict2list
 from flask_paginate import Pagination, get_page_parameter
@@ -114,15 +114,15 @@ def deploy_pro(project_id):
 @app.route('/images')
 def image_all():
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    pagination = Pagination(page=page, per_page=per_page, total=Build.count(), bs_version=3)
-    data = Build.order_by('tag', 'desc').paginate(per_page, page)
+    pagination = Pagination(page=page, per_page=per_page, total=Image.count(), bs_version=3)
+    data = Image.order_by('tag', 'desc').paginate(per_page, page)
     return render_template('build/image_list.html', data=data, pagination=pagination)
 
 
 @app.route('/images/<name>')
 def project_image(name):
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    data = Build.find_by_name(name)
+    data = Image.find_by_name(name)
     pagination = Pagination(page=page, per_page=per_page, total=data.count(), bs_version=3)
     data = data.order_by('tag', 'desc').paginate(per_page, page)
     return render_template('build/image_list.html', data=data, pagination=pagination)
@@ -130,7 +130,7 @@ def project_image(name):
 
 @app.route('/image/<tag>')
 def image_detail(tag):
-    data = Build.find_by_tag(tag).first()
+    data = Image.find_by_tag(tag).first()
     data.command = data.command.replace('\n', '<br/>')
     return render_template('build/image_details.html', data=data)
 

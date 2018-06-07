@@ -1,7 +1,7 @@
 from orator import Model
 from orator.orm import scope, accessor, mutator
 from app.helper import get_environs
-from . import Build, Environ
+from . import Environ, Image
 import json
 
 
@@ -76,7 +76,7 @@ class Project(Model):
     #         self.set_raw_attribute('change', value)
 
     def __get_env(self):
-        build_obj = Build.find_by_tag(self.curr_tag).first()
+        build_obj = Image.find_by_tag(self.curr_tag)
         base_env_obj = Environ.find_default().first()
         base_env_dict = json.loads(base_env_obj.value) if base_env_obj else {}
         default_env_dict = get_environs(build_obj.command)
