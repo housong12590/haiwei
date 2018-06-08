@@ -14,6 +14,7 @@ def deploy(url, pid):
         'image': 'registry.jiankanghao.net/{}:{}'.format(image.image_name, image.tag)
     }
     data = json.dumps(data)
+    print(data)
     headers = {'Content-Type': 'application/json; charset=utf-8'}
     resp = requests.post(url, data, headers=headers)
     if resp.status_code == 200:
