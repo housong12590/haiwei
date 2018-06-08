@@ -2,7 +2,7 @@
 
 {% block head %}
     {{ super() }}
-    <meta http-equiv="refresh" content="5">
+    <meta http-equiv="refresh" content="30">
 {% endblock %}
 
 {% block content %}
@@ -51,10 +51,10 @@
                                     <li>
                                         <a href="{{ url_for('build.deploy_dev',project_id=project.id) }}">开发环境</a>
                                     </li>
-{#                                    <li role="separator" class="divider"></li>#}
-{#                                    <li>#}
-{#                                        <a href="{{ url_for('build.deploy_pro',project_id=project.id) }}">生成环境</a>#}
-{#                                    </li>#}
+                                    {#                                    <li role="separator" class="divider"></li>#}
+                                    {#                                    <li>#}
+                                    {#                                        <a href="{{ url_for('build.deploy_pro',project_id=project.id) }}">生成环境</a>#}
+                                    {#                                    </li>#}
 
                                 </ul>
                             </div>

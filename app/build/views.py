@@ -102,13 +102,16 @@ def project_bind():
 @app.route('/deploy_dev/<project_id>')
 def deploy_dev(project_id):
     dev_url = Config.DEPLOY_DEV_URL
-    return deploy_k8s.deploy(dev_url, project_id)
+    result = deploy_k8s.deploy(dev_url, project_id)
+
+    return redirect(url_for('build.projects'))
 
 
 @app.route('/deploy_pro/<project_id>')
 def deploy_pro(project_id):
     pro_url = Config.DEPLOY_PRO_URL
-    return deploy_k8s.deploy(pro_url, project_id)
+    result = deploy_k8s.deploy(pro_url, project_id)
+    return redirect(url_for('build.projects'))
 
 
 @app.route('/images')

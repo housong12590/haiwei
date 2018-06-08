@@ -13,7 +13,7 @@ def deploy(url, pid):
         'id': pid,
         'image': 'registry.jiankanghao.net/{}:{}'.format(image.image_name, image.tag)
     }
-    data = json.dumps(data)
+    data = json.dumps(data, ensure_ascii=False)
     print(url, data)
     headers = {'Content-Type': 'application/json; charset=utf-8'}
     resp = requests.post(url, data, headers=headers)
