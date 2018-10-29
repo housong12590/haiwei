@@ -2,10 +2,11 @@ from orator import Model
 from orator.orm import scope, accessor, mutator
 from app.helper import get_environs
 from . import Environ, Image
+from . import Base
 import json
 
 
-class Project(Model):
+class Project(Model, Base):
 
     @scope
     def find_by_name(self, query, name):

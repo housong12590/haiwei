@@ -1,8 +1,9 @@
 from orator import Model
+from . import Base
 from orator.orm import scope
 
 
-class Environ(Model):
+class Environ(Model, Base):
 
     @scope
     def find_default(self, query):

@@ -12,8 +12,9 @@ class CreateProjectsTable(Migration):
             table.string('name')
             table.string('desc').nullable()
             table.string('image_name').nullable()
-            table.string('last_tag').nullable()
+            table.string('last_image_tag').nullable()
             table.string('address').nullable()
+            table.string('k8s_id')
             table.timestamps()
 
     def down(self):
