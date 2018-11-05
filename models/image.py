@@ -1,6 +1,6 @@
 from orator import Model
 from flask import abort
-from . import Base
+from models import Base
 from orator.orm import scope
 import re
 

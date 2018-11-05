@@ -9,8 +9,8 @@ class CreateDeploysTable(Migration):
         """
         with self.schema.create('deploys') as table:
             table.increments('id')
-            table.string('image_tag')
-            table.
+            # table.string('image_tag')
+            # table.
             table.timestamps()
 
     def down(self):

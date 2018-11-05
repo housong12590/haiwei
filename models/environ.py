@@ -1,5 +1,5 @@
 from orator import Model
-from . import Base
+from models import Base
 from orator.orm import scope
 
 

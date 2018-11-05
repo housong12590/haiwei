@@ -14,8 +14,10 @@ def create_app(config):
     db.init_app(app)
     bootstrap.init_app(app)
 
-    from .build import build as build_bp
-    app.register_blueprint(build_bp, url_prefix='/build')
+    # from .build import build as build_bp
+    # app.register_blueprint(build_bp, url_prefix='/build')
+    from .docker import docker as docker_db
+    app.register_blueprint(docker_db, url_prefix='/docker')
     # mysql 日志输出
     if config.DEBUG:
         mysql_log_output()
