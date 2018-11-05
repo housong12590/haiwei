@@ -10,9 +10,9 @@ class CreateProjectsTable(Migration):
         with self.schema.create('projects') as table:
             table.integer('id', unsigned=False)
             table.string('name')
-            table.string('desc').nullable()
             table.string('image_name').nullable()
             table.string('deploy_id')
+            table.string('desc').nullable()
             table.timestamps()
 
     def down(self):
