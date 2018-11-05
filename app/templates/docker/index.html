@@ -30,7 +30,7 @@
             <tbody>
             {% for project in projects %}
                 <tr>
-                    <th>{{ project.deploy_id }}</th>
+                    <th>{{ project.id }}</th>
                     <td>
                         {{ project.name }}
                     </td>
@@ -55,10 +55,4 @@
 
 {% endblock %}
 
-{% block scripts %}
-    {{ super() }}
-    <script>
-        var clipboard = new ClipboardJS('.btn');
-    </script>
-{% endblock %}
 

@@ -38,6 +38,7 @@ def index():
     return render_template('docker/index.html', projects=projects, image_names=image_names)
 
 
+@app.route('/project/<project_id>', methods=['GET', 'POST'])
 @app.route('/project/create', methods=['GET', 'POST'])
 def create_project(project_id=None):
     if request.method == 'GET':
@@ -50,11 +51,9 @@ def create_project(project_id=None):
                                project=project,
                                image_names=image_names,
                                projects=projects)
-    print(request.form)
     image_name = request.form.get('image_name')
     origin_project_id = request.form.get('project_id')
     auto_deploy = bool(request.form.get('auto_deploy'))
-    print(auto_deploy)
     origin_project = OriginProject.find(origin_project_id)
     if project_id is None:
         Project.insert({
@@ -69,11 +68,6 @@ def create_project(project_id=None):
         project.image_name = image_name
         project.save()
     return redirect(url_for('docker.index'))
-
-
-@app.route('/project/<project_id>', methods=['GET', 'POST'])
-def edit_project(project_id):
-    return create_project(project_id)
 
 
 @app.route('/update')

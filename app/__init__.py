@@ -35,7 +35,7 @@ def create_app(config):
 def app_redirect(app):
     @app.route('/')
     def index():
-        return redirect(url_for('build.projects'))
+        return redirect(url_for('docker.index'))
 
 
 def configure_migrations(app):
