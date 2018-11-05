@@ -13,9 +13,10 @@ class CreateImagesTable(Migration):
             table.string('image_tag')
             table.string('git_branch').nullable()
             table.string('git_message').nullable()
-            table.integer('status').default(0)  # 0:不需要部署 1:等待部署 2:部署成功 3:部署失败
             table.string('host').nullable()
             table.string('port').nullable()
+            table.enum('dev', ['Y', 'N', 'F', 'D']).default('N')
+            table.enum('pro', ['Y', 'N', 'F', 'D']).default('N')
             table.string('code_registry').nullable()
             table.string('pull_address')
             table.text('command').nullable()

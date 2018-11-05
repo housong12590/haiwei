@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h3>镜像列表</h3>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>名称</th>
+                <th>tag</th>
+                <th>Git分支</th>
+                <th>提交消息</th>
+                <th>开发环境</th>
+                <th>生产环境</th>
+                <th>构建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for image in images %}
+                <tr>
+                    <th>{{ image.id }}</th>
+                    <td>
+                        {{ image.image_name }}
+                    </td>
+                    <td>{{ image.image_tag }}</td>
+                    <td><span
+                            class="label {{ 'label-warning' if image.git_branch == 'develop' else 'label-primary' }}">{{ image.git_branch }}</span>
+                    </td>
+                    <td>{{ image.git_message }}</td>
+                    <td style="color: green">{{ image.dev }}</td>
+                    <td style="color: #bcbcbc">{{ image.pro }}</td>
+                    <td>{{ image.created_at | utc2local }}</td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var clipboard = new ClipboardJS('.btn');
+    </script>
+{% endblock %}
+

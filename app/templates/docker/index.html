@@ -8,17 +8,21 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h3>项目列表</h3>
+            <h3 class="header-title">项目列表</h3>
+            <a class="btn btn-primary header-btn"
+               href="{{ url_for('docker.create_project') }}">创建</a>
         </div>
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>#</th>
-                <th>项目名称</th>
-                <th>访问地址</th>
-                <th>镜像名称</th>
-                <th>镜像tag</th>
+                <th>名称</th>
+                <th>镜像</th>
+                <th>tag</th>
                 <th>Git分支</th>
+                {#                <th>提交消息</th>#}
+                <th>开发环境</th>
+                <th>生产环境</th>
                 <th>构建时间</th>
                 <th>菜单</th>
             </tr>
@@ -26,39 +30,21 @@
             <tbody>
             {% for project in projects %}
                 <tr>
-                    <th>{{ project.id }}</th>
+                    <th>{{ project.deploy_id }}</th>
                     <td>
-                        <a href="{{ url_for('build.project_detail',project_id=project.id) }}">{{ project.desc }}</a>
-                    </td>
-                    <td>
-                        <a href="{{ 'http://'~project.image.host }}"
-                           target="_blank">{{ project.image.host }}</a>
+                        {{ project.name }}
                     </td>
                     <td>{{ project.image_name }}</td>
-                    <td>{{ project.image.tag }}</td>
-                    <td>
-                        <span class="label {{ 'label-warning' if project.image.git_branch == 'develop' else 'label-primary' }}">{{ project.image.git_branch }}</span>
+                    <td>{{ project.image.image_tag }}</td>
+                    <td><span
+                            class="label {{ 'label-warning' if project.image.git_branch == 'develop' else 'label-primary' }}">{{ project.image.git_branch }}</span>
                     </td>
+                    {#                    <td>{{ project.image.git_message }}</td>#}
+                    <td style="color: green">{{ project.image.dev }}</td>
+                    <td style="color: #bcbcbc">{{ project.image.pro }}</td>
                     <td>{{ project.image.created_at | utc2local }}</td>
                     <td>
-                        {% if project.image %}
-                            <div class="dropdown">
-                            <span class="btn btn-primary btn-xs dropdown-toggle"
-                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                部署
-                            </span>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="{{ url_for('build.deploy_dev',project_id=project.id) }}">开发环境</a>
-                                    </li>
-                                    {#                                    <li role="separator" class="divider"></li>#}
-                                    {#                                    <li>#}
-                                    {#                                        <a href="{{ url_for('build.deploy_pro',project_id=project.id) }}">生成环境</a>#}
-                                    {#                                    </li>#}
 
-                                </ul>
-                            </div>
-                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

@@ -13,6 +13,19 @@
     display: inline;
 }
 
+.header-title {
+    line-height: 60px;
+    color: #333;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+.header-btn {
+    float: right;
+    display: inline-block;
+    margin-top: 14px;
+}
 
 .navbar a:hover {
     text-decoration: none;

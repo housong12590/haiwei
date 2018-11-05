@@ -36,11 +36,11 @@ class Image(Model, Base):
     def find_by_tags(self, query, tags: list):
         return query.where_in('tag', tags)
 
-    @scope
-    def find_one(self, query, args: dict):
-        for k, v in args:
-            query.where(k, v)
-        return query.first()
+    # @scope
+    # def find_one(self, query, args: dict):
+    #     for k, v in args:
+    #         query.where(k, v)
+    #     return query.first()
 
     @scope
     def find_or_404(self, query, args: dict):

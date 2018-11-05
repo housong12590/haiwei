@@ -1,6 +1,6 @@
 from orator import Model
 
 
-class Deploys(Model):
+class OriginProject(Model):
 
     pass
