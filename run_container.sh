@@ -10,7 +10,7 @@ docker run -d --name ${PROJECT_NAME} \
     -e MYSQL_HOST='192.168.0.210' \
     -e MYSQL_USER='root' \
     -e MYSQL_PASSWORD='hJYC8PsOsUR45wnDQtGle8cqCFbmN9eY' \
-    -e MYSQL_DB='kx_ops' \
+    -e MYSQL_DB='ghost' \
     -p 8023:5000 ${PROJECT_NAME}
 
 
