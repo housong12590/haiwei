@@ -14,6 +14,8 @@ def push():
         'git_branch': request.form.get('git_branch'),
         'git_message': request.form.get('git_message'),
         'code_registry': request.form.get('code_registry'),
+        'host': request.form.get('host'),
+        'port': request.form.get('port'),
         'command': re.sub(r'(-[vpe])', r'\\\n\1', request.form.get('command')),
         'dockerfile': request.form.get('dockerfile')
     }
