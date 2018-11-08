@@ -20,7 +20,7 @@
                 <th>镜像</th>
                 <th>tag</th>
                 <th>Git分支</th>
-                {#                <th>提交消息</th>#}
+                <th>提交消息</th>
                 <th>开发环境</th>
                 <th>生产环境</th>
                 <th>构建时间</th>
@@ -31,20 +31,37 @@
             {% for project in projects %}
                 <tr>
                     <th>{{ project.id }}</th>
-                    <td>
-                        {{ project.name }}
-                    </td>
+                    <td>{{ project.desc }}</td>
                     <td>{{ project.image_name }}</td>
                     <td>{{ project.image.image_tag }}</td>
                     <td><span
                             class="label {{ 'label-warning' if project.image.git_branch == 'develop' else 'label-primary' }}">{{ project.image.git_branch }}</span>
                     </td>
-                    {#                    <td>{{ project.image.git_message }}</td>#}
+                    <td>{{ project.image.git_message }}</td>
                     <td style="color: green">{{ project.image.dev }}</td>
                     <td style="color: #bcbcbc">{{ project.image.pro }}</td>
                     <td>{{ project.image.created_at | utc2local }}</td>
                     <td>
-
+                        {% if project.image %}
+                            <div class="dropdown">
+                            <span class="btn btn-primary btn-xs dropdown-toggle"
+                                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                菜单
+                            </span>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="{{ url_for('docker.create_project',project_id=project.id) }}">编辑</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url_for('docker.delete_project',project_id=project.id) }}">删除</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                        <a href="{{ url_for('docker.deploy',project_id=project.id) }}">部署</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

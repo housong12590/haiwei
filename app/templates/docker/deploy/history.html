@@ -1,0 +1,38 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h3>部署记录</h3>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>名称</th>
+                <th>image_tag</th>
+                <th>remark</th>
+                <th>开发环境</th>
+                <th>生产环境</th>
+                <th>构建时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for deploy in deploys %}
+                <tr>
+                    <th>{{ deploy.id }}</th>
+                    <td>{{ deploy.project_id }}</td>
+                    <td>{{ deploy.image_tag }}</td>
+                    <td>{{ deploy.remark }}</td>
+                    <td>{{ deploy.dev }}</td>
+                    <td>{{ deploy.pro }}</td>
+                    <td>{{ deploy.created_at | utc2local }}</td>
+
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

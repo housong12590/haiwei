@@ -27,3 +27,7 @@
 .navbar a:hover {
     text-decoration: none;
 }
+
+.label-text {
+    margin-top: 7px;
+}

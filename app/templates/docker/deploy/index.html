@@ -1,0 +1,136 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h3>项目部署</h3>
+        </div>
+
+        <form class="form-horizontal" method="post">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">项目名称</label>
+                <label class="col-sm-5 control-label" style="text-align: left">
+                    {{ project.desc }}
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">镜像tag</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="image_tag" id="image_tag">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">镜像名称</label>
+                <p class="col-sm-5 control-label" style="text-align: left" id="image_name">
+
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">git分支</label>
+                <p class="col-sm-5 control-label" style="text-align: left" id="git_branch">
+
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">commit</label>
+                <p class="col-sm-5 control-label" style="text-align: left;color: red"
+                   id="git_commit">
+
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">镜像地址</label>
+                <p class="col-sm-5 control-label" style="text-align: left" id="image_address">
+
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">生成时间</label>
+                <p class="col-sm-5 control-label" style="text-align: left" id="image_time">
+
+                </p>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">部署说明</label>
+                <div class="col-sm-5">
+                    <textarea class="form-control" name="remark" id="remark" placeholder="输入备注"
+                              rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="deploy_type" checked id="inlineRadio1"
+                               value="dev"> 开发环境
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="deploy_type" id="inlineRadio2"
+                               value="pro"> 生产环境
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="col-sm-offset-6 btn btn-primary" value="提交">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        var currentImage = null;
+        var images = null;
+        $.get('{{ url_for('docker.query_image',image_name=project.image_name) }}', function (data) {
+            images = data;
+            var imageTagSelect = $('#image_tag');
+            data.forEach(function (value) {
+                if (currentImage == null) {
+                    currentImage = value;
+                }
+                var option = "<option value='{0}'>{0}</option>".format(value.image_tag);
+                imageTagSelect.append(option);
+            });
+            var image = getCurrentImage();
+            updateImageInfo(image);
+        });
+
+        $('#image_tag').change(function () {
+            var image = getCurrentImage();
+            if (image != null) {
+                updateImageInfo(image);
+            }
+        });
+
+        function updateImageInfo(image) {
+            var pullAddress = image.pull_address.replace('192.168.0.210', 'registry.jiankanghao.net');
+            $('#image_name').html(image.image_name);
+            $('#git_branch').html(image.git_branch);
+            $('#git_commit').html(image.git_message);
+            $('#image_address').html(pullAddress);
+            $('#image_time').html(image.created_time);
+        }
+
+        function getCurrentImage() {
+            var image_tag = $('#image_tag').val();
+            for (var i = 0; i < images.length; i++) {
+                var image = images[i];
+                if (image.image_tag === image_tag) {
+                    return image
+                }
+            }
+            return null;
+        }
+
+    </script>
+{% endblock %}
+

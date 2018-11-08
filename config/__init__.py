@@ -29,10 +29,27 @@ class Config(object):
         }
     }
 
-    PROJECT_LIST = 'http://192.168.0.240:30016/'
+    PROJECT_LIST = 'http://aegaeon.default.192.168.0.240.xip.io/products'
 
     # 开发环境k8s部署url
-    DEPLOY_DEV_URL = 'http://192.168.0.240:30016/products'
+    DEPLOY_DEV_URL = 'http://aegaeon-dev.default.192.168.0.240.xip.io/products'
 
     # 生产环境k8s部署url
-    DEPLOY_PRO_URL = 'http://192.168.0.240:30016/products'
+    DEPLOY_PRO_URL = 'http://aegaeon.default.192.168.0.240.xip.io/products'
+
+    PROJECTS_PATH = './config/project.json'
+
+    PROJECTS_DATA = None
+
+    @staticmethod
+    def projects(update=False) -> dict:
+        if Config.PROJECTS_DATA is None or update:
+            with open(Config.PROJECTS_PATH, 'r', encoding='utf8') as f:
+                import json
+                data = {}
+                for item in json.load(f).get('data'):
+                    data[item.get('name')] = item
+                Config.PROJECTS_DATA = data
+                return data
+        else:
+            return Config.PROJECTS_DATA

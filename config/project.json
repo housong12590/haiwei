@@ -1,0 +1,111 @@
+{
+  "data": [
+    {
+      "description": "平台用户系统 - API",
+      "image": "registry.jiankanghao.net/haiwei/alex:20181106115312",
+      "name": "alex"
+    },
+    {
+      "description": "平台用户系统 - 管理后台",
+      "image": "registry.jiankanghao.net/haiwei/crm_mgr:20181105192417",
+      "name": "alex-bk"
+    },
+    {
+      "description": "健康档案 - API",
+      "image": "registry.jiankanghao.net/haiwei/asclepius_api:20180917171410",
+      "name": "asclepius"
+    },
+    {
+      "description": "健康档案 - 管理后台",
+      "image": "registry.jiankanghao.net/haiwei/asclepius_mgr:20180725182142",
+      "name": "asclepius-bk"
+    },
+    {
+      "description": "数字图书馆",
+      "image": "registry.jiankanghao.net/haiwei/coasts:20181106112516",
+      "name": "coasts"
+    },
+    {
+      "description": "ElasticSearch（尽量不要动）",
+      "image": "elasticsearch:alpine",
+      "name": "elas"
+    },
+    {
+      "description": "ElasticSearch数据查看服务（尽量不要动）",
+      "image": "elastichq/elasticsearch-hq",
+      "name": "elastichq"
+    },
+    {
+      "description": "听香 - 直播异常检修",
+      "image": "registry.jiankanghao.net/haiwei/live_timed_task:20181019094839",
+      "name": "livebroadcast-abnormal-robot"
+    },
+    {
+      "description": "听香 - 管理后台",
+      "image": "registry.jiankanghao.net/haiwei/kx_mgr:20181107112910",
+      "name": "livebroadcast-bk"
+    },
+    {
+      "description": "听香 - 名师咨询",
+      "image": "registry.jiankanghao.net/haiwei/kx_im:20180713163628",
+      "name": "livebroadcast-doctorconsultation"
+    },
+    {
+      "description": "听香 - 下载页",
+      "image": "registry.jiankanghao.net/haiwei/app_download:20181015172945",
+      "name": "livebroadcast-download"
+    },
+    {
+      "description": "听香 - H5端",
+      "image": "registry.jiankanghao.net/haiwei/kx_live:20180711103210",
+      "name": "livebroadcast-mobile"
+    },
+    {
+      "description": "听香 - API",
+      "image": "registry.jiankanghao.net/haiwei/live_api:20181102184113",
+      "name": "livebroadcast-v2"
+    },
+    {
+      "description": "听香 - 云信对接",
+      "image": "registry.jiankanghao.net/haiwei/yunxin_api:20181031162110",
+      "name": "livebroadcast-yunxin"
+    },
+    {
+      "description": "云存储（暂仅支持OSS）",
+      "image": "registry.jiankanghao.net/haiwei/phoebe:20180917115914",
+      "name": "phoebe"
+    },
+    {
+      "description": "邮件服务",
+      "image": "registry.jiankanghao.net/haiwei/kx_mail:20180814104312",
+      "name": "post"
+    },
+    {
+      "description": "码生成服务 （暂仅支持二维码）",
+      "image": "registry.jiankanghao.net/haiwei/scancode:20180925113720",
+      "name": "scancode"
+    },
+    {
+      "description": "短信服务",
+      "image": "registry.jiankanghao.net/haiwei/kx_sms:20180821142013",
+      "name": "sms"
+    },
+    {
+      "description": "健康商城",
+      "image": "registry.jiankanghao.net/haiwei/kxshop:20181012095525",
+      "name": "store"
+    },
+    {
+      "description": "健康商城 - H5端",
+      "image": "registry.jiankanghao.net/haiwei/kxshop_h5:20181018180655",
+      "name": "store-mobile"
+    },
+    {
+      "description": "URL转PDF服务",
+      "image": "arachnysdocker/athenapdf-service:latest",
+      "name": "swaper"
+    }
+  ],
+  "msg": "请求成功",
+  "status_code": 200
+}

@@ -9,18 +9,25 @@
         <form class="form-horizontal" method="post">
             <div class="form-group">
                 <label class="col-sm-2 control-label">项目名称</label>
-                <div class="col-sm-3">
-                    <select class="form-control" name="project_id">
-                        {% for item in projects %}
-                            <option value="{{ item.id }}"{{ 'selected' if item.id == project.id else '' }}>{{ item.name }}</option>
-                        {% endfor %}
+                <div class="col-sm-4">
+                    <select class="form-control" name="project_name"
+                            id="project_name" {{ 'disabled' if project else '' }}>
+                        {% if project %}
+                            <option value="">{{ project.desc }}</option>
+                        {% else %}
+                            <option value="">---请选择---</option>
+                            {% for item in projects %}
+                                <option value="{{ item.name }}"{{ 'selected' if item.name == project.name else '' }}>{{ item.description }}</option>
+                            {% endfor %}
+                        {% endif %}
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">选择镜像</label>
-                <div class="col-sm-3">
-                    <select class="form-control" name="image_name">
+                <div class="col-sm-4">
+                    <select class="form-control" name="image_name" id="image_name">
+                        <option value="">---请选择---</option>
                         {% for image_name in image_names %}
                             <option value="{{ image_name }}" {{ 'selected' if project.image_name == image_name else '' }}>{{ image_name }}</option>
                         {% endfor %}
@@ -32,15 +39,34 @@
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" {{ '' if project and project.auto_deploy else "checked" }} name="auto_deploy" value="1"> 自动部署
+                            <input type="checkbox" {{ 'checked' if project and project.auto_deploy else "" }}
+                                   name="auto_deploy" value="1"> 自动部署
                         </label>
                     </div>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="col-sm-offset-5 btn btn-primary" value="提交">
                 </div>
+            </div>
         </form>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function toVaild(form) {
+            $("#project_name").removeAttr("disabled");
+            var project_name = form.project_name.value;
+            var image_name = form.image_name.value;
+            if (project_name && image_name) {
+                return true;
+            }
+            console.log(project_name);
+            console.log(image_name);
+            alert("缺少必要参数");
+            return false;
+        }
+    </script>
 {% endblock %}
 
