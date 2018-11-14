@@ -7,3 +7,4 @@ Flask-Script==2.0.6
 DBUtils==1.2
 Flask-paginate==0.5.1
 requests==2.18.4
+Flask-Login==0.4.1

@@ -31,3 +31,10 @@
 .label-text {
     margin-top: 7px;
 }
+
+.login_content {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 300px auto auto;
+}

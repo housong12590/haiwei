@@ -1,8 +1,9 @@
 from . import docker as app
 from orator.exceptions.query import QueryException
-from flask import request, render_template, redirect, url_for, abort, jsonify
+from flask import request, render_template, redirect, url_for, abort, jsonify, flash
 from app.helper import make_response
-from models import Project, Image, Deploy
+from models import Project, Image, Deploy, User
+from flask_login import current_user, login_required, login_user, logout_user
 from config import Config
 import re
 import os
@@ -36,15 +37,35 @@ def push():
     return make_response()
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    username = request.form.get('username')
+    password = request.form.get('password')
+    user = User.where('username', username).first()
+    if user is None:
+        flash('当前用户不存在,请联系管理员!')
+        return render_template('login.html', username=username, password=password)
+    if user.password != password:
+        flash('登录密码错误!')
+        return render_template('login.html', username=username, password=password)
+    login_user(user)
+    return redirect(url_for('docker.index'))
+
+
+@login_required
 @app.route('/')
 def index():
-    projects = Project.all()
-    for project in projects:
-        last_image = Image.where('image_name', project.image_name) \
-            .order_by('image_tag', 'desc').first()
-        project.image = last_image
-    image_names = Image.group_by('image_name').lists('image_name')
-    return render_template('docker/index.html', projects=projects, image_names=image_names)
+    projects = Config.projects(False)
+    return jsonify(projects)
+    # projects = Project.all()
+    # for project in projects:
+    #     last_image = Image.where('image_name', project.image_name) \
+    #         .order_by('image_tag', 'desc').first()
+    #     project.image = last_image
+    # image_names = Image.group_by('image_name').lists('image_name')
+    # return render_template('docker/index.html', projects=projects, image_names=image_names)
 
 
 @app.route('/project/<project_id>', methods=['GET', 'POST'])

@@ -1,11 +1,14 @@
 from flask import Flask, redirect, url_for
 from flask_bootstrap import Bootstrap
 from flask_orator import Orator
+from flask_login import LoginManager
 from app.helper import utc2local, get_environs
+from models import User
 import os
 
 db = Orator()
 bootstrap = Bootstrap()
+login_manager = LoginManager()
 
 
 def create_app(config):
@@ -13,6 +16,8 @@ def create_app(config):
     app.config.from_object(config)
     db.init_app(app)
     bootstrap.init_app(app)
+    login_manager.init_app(app)
+    login_manager.login_view = 'docker.login'
 
     # from .build import build as build_bp
     # app.register_blueprint(build_bp, url_prefix='/build')
@@ -56,3 +61,9 @@ def mysql_log_output():
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     logger.addHandler(handler)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    print("load_user  %s" % user_id)
+    return User.find(user_id)

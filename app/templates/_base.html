@@ -7,6 +7,7 @@
         {% block styles %}
             <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}">
             <link rel="stylesheet" href="{{ url_for('static',filename='css/github.css') }}">
+            <link rel="stylesheet" href="{{ url_for('static',filename='css/spop.min.css') }}">
             <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css') }}">
         {% endblock %}
     {% endblock %}
@@ -47,8 +48,22 @@
     <script src="{{ url_for('static',filename='js/bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/highlight.pack.js') }}"></script>
     <script src="{{ url_for('static',filename='js/clipboard.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/spop.min.js') }}"></script>
     <script src="{{ url_for('static',filename='js/custom.js') }}"></script>
+
+    <script>
+        {% for msg in get_flashed_messages() %}
+            spop({
+                template: '{{ msg }}',// string required. Without it nothing happens!
+                style: 'default',// success, warning or error
+                autoclose: true,// miliseconds
+                position: 'top-right'// top-left top-center bottom-left bottom-center bottom-right
+            });
+        {% endfor %}
+
+    </script>
 {% endblock %}
+
 
 </body>
 </html>
