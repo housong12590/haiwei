@@ -46,10 +46,25 @@ class Config(object):
         if Config.PROJECTS_DATA is None or update:
             with open(Config.PROJECTS_PATH, 'r', encoding='utf8') as f:
                 import json
-                data = {}
-                for item in json.load(f).get('data'):
-                    data[item.get('name')] = item
-                Config.PROJECTS_DATA = data
-                return data
-        else:
-            return Config.PROJECTS_DATA
+                projects = json.load(f).get('data')
+                for project in projects:
+                    image = project.get('image')
+                    try:
+                        image, tag = image.split(':')
+                    except ValueError:
+                        tag = 'latest'
+                    try:
+                        prefix, image = image.rsplit('/', 1)
+                    except ValueError:
+                        prefix = ''
+                    project.pop('image')
+                    desc = project.get('description', '')
+                    index = desc.find('（')
+                    if index != -1:
+                        desc = desc[:index]
+                    project['desc'] = desc
+                    project['name'] = image
+                    project['tag'] = tag
+                    project['prefix'] = prefix
+                Config.PROJECTS_DATA = projects
+        return Config.PROJECTS_DATA

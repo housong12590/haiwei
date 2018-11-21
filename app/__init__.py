@@ -48,7 +48,7 @@ def configure_migrations(app):
     with open('db_conf.py', 'w') as f:
         f.write('DATABASES = ' + str(databases))
     os.system('orator migrate -f -n -c db_conf.py')
-    os.remove('db_conf.py')
+    # os.remove('db_conf.py')
 
 
 def mysql_log_output():

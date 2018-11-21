@@ -21,7 +21,17 @@ docker run -d --name asclepius_api --restart always \
 -e SECRET_KEY_BASE='37ccc5caf5e7245671aa1d36e4d5f33c6df35082c2ee0557fcf93609ebdc5d9677c29b3a112a995206a933385ad7b0429a32a4bbf90432a4e003617ca3038f5e' \
 -p 3005:3000 192.168.0.210/haiwei/asclepius_api
 """
-regexp = re.compile(r"-e (\w*?)='?(.*?)'? ")
-result = regexp.findall(text)
-for i in result:
-    print(i)
+# regexp = re.compile(r"-e (\w*?)='?(.*?)'? ")
+# result = regexp.findall(text)
+# for i in result:
+#     print(i)
+
+text = "registry.jiankanghao.net/haiwei/kx_sms"
+
+try:
+    image, tag = text.split(':')
+except ValueError:
+    image = text
+    tag = 'latest'
+print(image)
+print(tag)
