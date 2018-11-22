@@ -36,35 +36,3 @@ class Config(object):
 
     # 生产环境k8s部署url
     DEPLOY_PRO_URL = 'http://aegaeon.default.192.168.0.240.xip.io/products'
-
-    PROJECTS_PATH = './config/project.json'
-
-    PROJECTS_DATA = None
-
-    @staticmethod
-    def projects(update=False) -> dict:
-        if Config.PROJECTS_DATA is None or update:
-            with open(Config.PROJECTS_PATH, 'r', encoding='utf8') as f:
-                import json
-                projects = json.load(f).get('data')
-                for project in projects:
-                    image = project.get('image')
-                    try:
-                        image, tag = image.split(':')
-                    except ValueError:
-                        tag = 'latest'
-                    try:
-                        prefix, image = image.rsplit('/', 1)
-                    except ValueError:
-                        prefix = ''
-                    project.pop('image')
-                    desc = project.get('description', '')
-                    index = desc.find('（')
-                    if index != -1:
-                        desc = desc[:index]
-                    project['desc'] = desc
-                    project['name'] = image
-                    project['tag'] = tag
-                    project['prefix'] = prefix
-                Config.PROJECTS_DATA = projects
-        return Config.PROJECTS_DATA

@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header" style="position: relative">
+            <h3 class="header-title">用户列表</h3>
+            <a class="btn btn-primary"
+               style="float:right;position: absolute;top: calc(50% - 17px);right: 10px"
+               href="{{ url_for('users.users') }}">添加</a>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="col-md-1">#</th>
+                <th class="col-md-1">昵称</th>
+                <th class="col-md-2">帐号</th>
+                <th class="col-md-2">密码</th>
+                <th class="col-md-2">创建时间</th>
+                <th class="col-md-1">菜单</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <th>{{ loop.index }}</th>
+                    <td>{{ user.nickname }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.password }}</td>
+                    <td>{{ user.created_at | utc2local }}</td>
+                    <td>
+                        <a href="{{ url_for('users.users',user_id=user.id) }}"
+                           class="btn btn-primary btn-xs">
+                            编辑
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
+
+

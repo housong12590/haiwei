@@ -12,6 +12,7 @@ class CreateUsersTable(Migration):
             table.string('username').unique()
             table.string('password')
             table.string('nickname')
+            table.string('mobile')
             table.boolean('is_admin').default(False)
             table.timestamps()
 

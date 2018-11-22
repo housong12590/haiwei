@@ -25,13 +25,19 @@
                     <ul class="nav navbar-nav" style="margin-left: 100px">
                         <li><a href="{{ url_for('docker.index') }}"
                                style="color: #333;font-size: 16px">首页</a></li>
-                        </li>
                         <li><a href="{{ url_for('docker.images') }}"
                                style="color: #333;font-size: 16px">镜像</a></li>
-                        </li>
                         <li><a href="{{ url_for('docker.deploy_history') }}"
                                style="color: #333;font-size: 16px">历史</a></li>
-                        </li>
+
+                        {% if current_user.is_admin %}
+                            <li><a href="{{ url_for('users.index') }}"
+                                   style="color: #333;font-size: 16px">成员</a></li>
+                        {% endif %}
+
+                        <li><a href="{{ url_for('users.logout') }}"
+                               style="color: #333;font-size: 16px">登出</a></li>
+
                     </ul>
                 </div>
             </div>

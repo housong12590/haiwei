@@ -17,12 +17,12 @@ def create_app(config):
     db.init_app(app)
     bootstrap.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'docker.login'
+    login_manager.login_view = 'users.login'
 
-    # from .build import build as build_bp
-    # app.register_blueprint(build_bp, url_prefix='/build')
-    from .docker import docker as docker_db
-    app.register_blueprint(docker_db, url_prefix='/docker')
+    from .users import users as user_bp
+    app.register_blueprint(user_bp, url_prefix='/users')
+    from .docker import docker as docker_bp
+    app.register_blueprint(docker_bp, url_prefix='/docker')
     # mysql 日志输出
     if config.DEBUG:
         mysql_log_output()
@@ -48,7 +48,7 @@ def configure_migrations(app):
     with open('db_conf.py', 'w') as f:
         f.write('DATABASES = ' + str(databases))
     os.system('orator migrate -f -n -c db_conf.py')
-    # os.remove('db_conf.py')
+    os.remove('db_conf.py')
 
 
 def mysql_log_output():

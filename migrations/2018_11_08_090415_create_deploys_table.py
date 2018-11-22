@@ -14,6 +14,7 @@ class CreateDeploysTable(Migration):
             table.text('remark').nullable()
             table.enum('dev', ['Y', 'N', 'F', 'D']).default('N')
             table.enum('pro', ['Y', 'N', 'F', 'D']).default('N')
+            table.string('type')
             table.index('image_tag')
             table.timestamps()
 

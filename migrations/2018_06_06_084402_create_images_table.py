@@ -15,8 +15,6 @@ class CreateImagesTable(Migration):
             table.string('git_message').nullable()
             table.string('host').nullable()
             table.string('port').nullable()
-            table.enum('dev', ['Y', 'N', 'F', 'D']).default('N')
-            table.enum('pro', ['Y', 'N', 'F', 'D']).default('N')
             table.string('code_registry').nullable()
             table.string('pull_address')
             table.text('command').nullable()

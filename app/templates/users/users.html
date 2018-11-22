@@ -1,0 +1,82 @@
+{% extends '_base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h3>创建用户</h3>
+        </div>
+
+        <form class="form-horizontal" method="post" onsubmit="return checkArgs(this);">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">帐号</label>
+                <div class="col-sm-4">
+                    <input class="form-control" name="username" id="username" placeholder="请输入登录帐号"
+                           value="{{ user.username if user else '' }}"/>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">昵称</label>
+                <div class="col-sm-4">
+                    <input class="form-control" name="nickname" id="nickname" placeholder="请输入昵称"
+                           value="{{ user.nickname if user else '' }}"/>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">手机号</label>
+                <div class="col-sm-4">
+                    <input class="form-control" name="mobile" id="mobile" placeholder="请输入手机号"
+                           value="{{ user.mobile if user else '' }}"/>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-4">
+                    <input class="form-control" name="password" id="password" placeholder="请输入密码"
+                           value="{{ user.password if user else '' }}"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+                    <input type="submit" class="col-sm-offset-3 btn btn-primary" value="提交">
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        function checkArgs(form) {
+            var username = form.username.value;
+            var nickname = form.nickname.value;
+            var password = form.password.value;
+            var mobile = form.mobile.value;
+            if (!username) {
+                alert('用户名不可为空!');
+                return false;
+            }
+            if (!nickname) {
+                alert('昵称不可为空!');
+                return false;
+            }
+            if (!mobile) {
+                alert('手机号不可为空!');
+                return false;
+            }
+            if (password.length < 6) {
+                alert('密码长度不能少于6位');
+                return false;
+            }
+            return true;
+        }
+    </script>
+{% endblock %}
+
