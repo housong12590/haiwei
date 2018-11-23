@@ -166,6 +166,7 @@ def send_wx_template_msg(_deploy):
     change_deploy_status(_deploy, 'D')
 
 
+
 def send_deploy_request(_deploy):
     if _deploy is None:
         abort(500)
