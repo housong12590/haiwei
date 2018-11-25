@@ -1,11 +1,21 @@
 {% extends '_base.html' %}
 
 {% block content %}
+    {#    {{ images[0] }}#}
     <div class="container">
         <div class="page-header">
             <h3>镜像列表</h3>
         </div>
-        <table class="table table-bordered">
+
+        <form class="form-inline" method="get">
+            <div class="form-group">
+                <label style="margin-right: 10px">镜像名</label>
+                <input type="text" class="form-control" id="image_name" placeholder="请输入镜像名称"
+                       value="{{ request.args.image_name }}">
+            </div>
+            <div class="btn btn-primary" style="margin-left: 10px" onclick="search();">搜索</div>
+        </form>
+        <table class="table table-bordered" style="margin-top: 20px">
             <thead>
             <tr>
                 <th>#</th>
@@ -13,8 +23,6 @@
                 <th>tag</th>
                 <th>Git分支</th>
                 <th>提交消息</th>
-                <th>开发环境</th>
-                <th>生产环境</th>
                 <th>构建时间</th>
             </tr>
             </thead>
@@ -30,15 +38,30 @@
                             class="label {{ 'label-warning' if image.git_branch == 'develop' else 'label-primary' }}">{{ image.git_branch }}</span>
                     </td>
                     <td>{{ image.git_message }}</td>
-                    <td style="color: green">{{ image.dev }}</td>
-                    <td style="color: #bcbcbc">{{ image.pro }}</td>
                     <td>{{ image.created_at | utc2local }}</td>
 
                 </tr>
             {% endfor %}
 
             </tbody>
+
         </table>
+        <div style="float: right;margin-bottom: 50px">
+            {{ pagination.links }}
+        </div>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        function search() {
+            var imageName = $('#image_name').val();
+            $.get('{{ url_for('docker.images')}}', {image_name: imageName}, function (res) {
+                $("body").html(res);
+            })
+        }
+
+    </script>
 {% endblock %}

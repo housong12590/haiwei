@@ -15,7 +15,8 @@
                 <th class="col-md-3">remark</th>
                 <th class="col-md-1">环境</th>
                 <th class="col-md-1">状态</th>
-                <th class="col-md-1">构建时间</th>
+                <th class="col-md-1">发起人</th>
+                <th class="col-md-1">部署时间</th>
             </tr>
             </thead>
             <tbody>
@@ -26,15 +27,18 @@
                     <td>{{ deploy.image_name }}</td>
                     <td>{{ deploy.image_tag }}</td>
                     <td>{{ deploy.remark }}</td>
-                    <td>{{ '开发' if deploy.type == 'dev' else '生产'  }}</td>
+                    <td>{{ '开发' if deploy.type == 'dev' else '生产' }}</td>
                     <td>{{ deploy.pro if deploy.type == 'pro' else deploy.dev }}</td>
-                    <td>{{ deploy.created_at | utc2local }}</td>
+                    <td>{{ deploy.nickname }}</td>
+                    <td>{{ deploy.updated_at | utc2local }}</td>
 
                 </tr>
             {% endfor %}
-
             </tbody>
         </table>
+        <div style="float: right;margin-bottom: 50px">
+            {{ pagination.links }}
+        </div>
     </div>
 
 {% endblock %}

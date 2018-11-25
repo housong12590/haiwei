@@ -2,8 +2,9 @@ from . import docker as app
 from orator.exceptions.query import QueryException
 from flask import request, render_template, redirect, url_for, abort, jsonify, flash
 from app.helper import make_response
-from models import Image, Deploy, Project
+from models import Image, Deploy, Project, User
 from flask_login import login_required, current_user
+from flask_paginate import get_page_parameter, Pagination
 from config import Config
 from app.utils.msg import Ding
 import re
@@ -40,6 +41,9 @@ def push():
 
 @app.route('/init')
 def init():
+    admin = User.where('is_admin', True).first()
+    if admin is None:
+        User.insert({'username': 'admin', 'nickname': '管理员', 'password': 'kexin123456', 'is_admin': True})
     import requests
     from config import Config
     resp = requests.get(Config.PROJECT_LIST)
@@ -92,23 +96,29 @@ def index():
     return render_template('docker/index.html', projects=projects)
 
 
-@app.route('/images/<image_name>')
 @app.route('/images')
 @login_required
-def images(image_name=None):
+def images():
     image = Image
+    image_name = request.args.get('image_name')
     if image_name:
         image = image.where('image_name', image_name)
-    data = image.order_by('image_tag', 'desc').get()
-    return render_template('docker/images.html', images=data)
+    data = image.order_by('image_tag', 'desc')
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    pagination = Pagination(page=page, per_page=15, css_framework='foundation', total=data.count())
+    data = data.paginate(15, page)
+    return render_template('docker/images.html', images=data, pagination=pagination)
 
 
 @app.route('deploy_history')
 @login_required
 def deploy_history():
     deploys = Deploy.join('projects', 'projects.image_name', '=', 'deploys.image_name') \
-        .order_by('deploys.created_at', 'desc').get()
-    return render_template('deploy/history.html', deploys=deploys)
+        .join('users', 'users.id', '=', 'deploys.user_id').order_by('deploys.created_at', 'desc')
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    pagination = Pagination(page=page, per_page=15, css_framework='foundation', total=deploys.count())
+    deploys = deploys.paginate(15, page)
+    return render_template('deploy/history.html', deploys=deploys, pagination=pagination)
 
 
 @app.route('/deploy/<image_name>', methods=['GET', 'POST'])
@@ -137,10 +147,11 @@ def deploy_image(tag, remark='开发环境部署', _type='dev'):
     obj.image_name = image.image_name
     obj.remark = remark
     obj.type = _type
+    obj.user_id = current_user.id
     obj.save()
     if _type == 'dev':
         return send_deploy_request(obj)
-    return send_deploy_request(obj)
+    return send_wx_template_msg(obj)
 
 
 @app.route('/query_image/<image_name>')
@@ -164,7 +175,30 @@ def query_image(image_name):
 
 def send_wx_template_msg(_deploy):
     change_deploy_status(_deploy, 'D')
+    from app.utils import wx
+    user = User.find(_deploy.user_id)
+    project = Project.where('image_name', _deploy.image_name).first()
+    wx.send_template_msg('', '', '', '', '', _deploy.remark)
 
+
+@app.route('/verify_deploy/<deploy_id>', methods=['GET', 'POST'])
+def verify_deploy(deploy_id):
+    _deploy = Deploy.find(deploy_id)
+    if _deploy is None:
+        abort(500)
+    if request.method == 'GET':
+        image = Image.where('image_tag', _deploy.image_tag).first()
+        project = Project.where('image_name', _deploy.image_name).first()
+        user = User.find(_deploy.user_id)
+        return render_template('deploy/verify.html', deploy=_deploy, image=image, project=project, user=user)
+    admin_pwd = request.form.get('admin_pwd')
+    admin = User.where('is_admin', True).first()
+    if admin.password == admin_pwd:
+        send_deploy_request(_deploy)
+        flash('请求发送成功')
+        return redirect(url_for('docker.index'))
+    flash('密码错误!')
+    return redirect(url_for('docker.verify_deploy', deploy_id=deploy_id))
 
 
 def send_deploy_request(_deploy):

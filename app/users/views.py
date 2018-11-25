@@ -17,7 +17,7 @@ def login():
     if user.password != password:
         flash('登录密码错误!')
         return render_template('users/login.html', username=username, password=password)
-    login_user(user)
+    login_user(user, remember=True)
     return redirect(url_for('docker.index'))
 
 

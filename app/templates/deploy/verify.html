@@ -1,0 +1,91 @@
+{% extends '_base.html' %}
+
+.login_content {
+position: relative;
+width: 400px;
+height: 400px;
+margin: 300px auto auto;
+}
+
+{% block body %}
+    <div style="position: relative;margin: 200px auto auto;width: 400px">
+        <form class="form-horizontal" method="post">
+
+             <div class="form-group" style="margin-bottom: 8px">
+                <label class="col-sm-3 control-label">项目名称</label>
+                <div class="col-sm-8" style="margin-top: 7px">
+                    {{ project.desc }}
+                </div>
+            </div>
+
+             <div class="form-group" style="margin-bottom: 8px">
+                <label class="col-sm-3 control-label">镜像名</label>
+                <div class="col-sm-8" style="margin-top: 7px">
+                    {{ project.image_prefix~'/'~image.image_name~':'~image.image_tag }}
+                </div>
+            </div>
+
+             <div class="form-group" style="margin-bottom: 8px">
+                <label class="col-sm-3 control-label">git commit</label>
+                <div class="col-sm-8" style="margin-top: 7px">
+                    {{ image.git_message | replace ('\n','<br>')| safe }}
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 8px">
+                <label class="col-sm-3 control-label">发起时间</label>
+                <div class="col-sm-8" style="margin-top: 7px">
+                    {{ deploy.created_at | utc2local }}
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 8px">
+                <label class="col-sm-3 control-label">发起人</label>
+                <div class="col-sm-8" style="margin-top: 7px">
+                    {{ user.nickname }}
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 8px">
+                <label class="col-sm-3 control-label">备注说明</label>
+                <div class="col-sm-8" style="margin-top: 7px">
+                    {{ deploy.remark | replace ('\n','<br>')|safe }}
+                </div>
+            </div>
+
+            {% if deploy.pro == 'Y' %}
+                <p style="font-size: 16px;color:red;width: 100%;text-align: center">本次部署已结束</p>
+                <div style="text-align: center">
+                    <a class="btn btn-primary" href="{{ url_for('docker.index') }}"
+                       style="display: inline-block">回到首页</a>
+
+                </div>
+            {% else %}
+                <div class="form-group" style="margin-bottom: 8px;margin-top: 10px">
+                    <label class="col-sm-3 control-label">管理员密码</label>
+                    <div class="col-sm-8">
+                        <input type="password" value="" class="form-control" id="password"
+                               name="password"
+                               placeholder="密码">
+                    </div>
+                </div>
+
+                 <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-10">
+                        <p style="font-size: 12px;color: #333">输入管理员密码,验证成功后即可发布部署请求!</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-10">
+                        <button type="submit" class="btn btn-primary">确认</button>
+                    </div>
+                </div>
+            {% endif %}
+
+        </form>
+    </div>
+
+{% endblock %}
+
+
+

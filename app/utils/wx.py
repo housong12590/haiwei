@@ -1,7 +1,6 @@
 import requests
 import json
 import time
-import datetime
 
 app_id = 'wxebf39e33eb5ac45f'
 
@@ -29,13 +28,13 @@ def get_access_token():
     return token
 
 
-def send_template_msg(title, name, project_name, image, remark):
+def send_template_msg(deploy_url, title, name, project_name, image, remark):
     url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' \
           % get_access_token()
     params = {
         "touser": "oH1Iev7F_OtsTeY_RU_oWGC44SvY",
         "template_id": "Q89p_ZgGY_esdEAXF9gq5jgXT4OkvjHFrroGe7wAZlg",
-        "url": "http://www.baidu.com",
+        "url": deploy_url,
         "data": {
             "first": {
                 "value": title,
@@ -71,7 +70,7 @@ def send_template_msg(title, name, project_name, image, remark):
     return False
 
 
-if send_template_msg('ceshi', 'hous', 'coasts', '123123123', '1.0.3'):
+if send_template_msg('http://www.baidu.com', 'ceshi', 'hous', 'coasts', '123123123', '1.0.3'):
     print('发送成功')
 else:
     print("发送失败")

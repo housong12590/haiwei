@@ -16,6 +16,7 @@ class CreateDeploysTable(Migration):
             table.enum('pro', ['Y', 'N', 'F', 'D']).default('N')
             table.string('type')
             table.index('image_tag')
+            table.integer('user_id')
             table.timestamps()
 
     def down(self):
