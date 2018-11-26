@@ -24,6 +24,7 @@ def get_access_token():
         if req.status_code == 200:
             data = json.loads(req.text, encoding='utf8')
             global token
+            print(data)
             token = data.get('access_token')
     return token
 
@@ -31,6 +32,7 @@ def get_access_token():
 def send_template_msg(deploy_url, title, name, project_name, image, remark):
     url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' \
           % get_access_token()
+    print(url)
     params = {
         "touser": "oH1Iev7F_OtsTeY_RU_oWGC44SvY",
         "template_id": "Q89p_ZgGY_esdEAXF9gq5jgXT4OkvjHFrroGe7wAZlg",
@@ -49,11 +51,11 @@ def send_template_msg(deploy_url, title, name, project_name, image, remark):
                 "color": "#173177"
             },
             "keyword3": {
-                "value": time.strftime("%Y-%m-%d %H:%M:%S"),
+                "value": name,
                 "color": "#173177"
             },
             "keyword4": {
-                "value": name,
+                "value": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "color": "#173177"
             },
             "remark": {
@@ -67,10 +69,5 @@ def send_template_msg(deploy_url, title, name, project_name, image, remark):
         data = json.loads(req.text, encoding='utf8')
         if data.get('errmsg') == 'ok':
             return True
+    print(req.text)
     return False
-
-
-if send_template_msg('http://www.baidu.com', 'ceshi', 'hous', 'coasts', '123123123', '1.0.3'):
-    print('发送成功')
-else:
-    print("发送失败")

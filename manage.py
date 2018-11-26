@@ -6,5 +6,5 @@ app = create_app(Config)
 manager = Manager(app)
 
 if __name__ == '__main__':
-    app.run()
+    app.run('0.0.0.0')
     # manager.run()

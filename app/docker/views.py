@@ -43,7 +43,8 @@ def push():
 def init():
     admin = User.where('is_admin', True).first()
     if admin is None:
-        User.insert({'username': 'admin', 'nickname': '管理员', 'password': 'kexin123456', 'is_admin': True})
+        User.insert(
+            {'username': 'admin', 'nickname': '管理员', 'password': 'kexin123456', 'is_admin': True})
     import requests
     from config import Config
     resp = requests.get(Config.PROJECT_LIST)
@@ -116,7 +117,8 @@ def deploy_history():
     deploys = Deploy.join('projects', 'projects.image_name', '=', 'deploys.image_name') \
         .join('users', 'users.id', '=', 'deploys.user_id').order_by('deploys.created_at', 'desc')
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    pagination = Pagination(page=page, per_page=15, css_framework='foundation', total=deploys.count())
+    pagination = Pagination(page=page, per_page=15, css_framework='foundation',
+                            total=deploys.count())
     deploys = deploys.paginate(15, page)
     return render_template('deploy/history.html', deploys=deploys, pagination=pagination)
 
@@ -178,7 +180,11 @@ def send_wx_template_msg(_deploy):
     from app.utils import wx
     user = User.find(_deploy.user_id)
     project = Project.where('image_name', _deploy.image_name).first()
-    wx.send_template_msg('', '', '', '', '', _deploy.remark)
+    wx.send_template_msg(
+        'http://192.168.0.80:5000' + url_for('docker.verify_deploy', deploy_id=_deploy.id),
+        project.desc, user.nickname, project.desc,
+        project.image_name + ':' + _deploy.image_tag,
+        _deploy.remark)
 
 
 @app.route('/verify_deploy/<deploy_id>', methods=['GET', 'POST'])
@@ -190,8 +196,9 @@ def verify_deploy(deploy_id):
         image = Image.where('image_tag', _deploy.image_tag).first()
         project = Project.where('image_name', _deploy.image_name).first()
         user = User.find(_deploy.user_id)
-        return render_template('deploy/verify.html', deploy=_deploy, image=image, project=project, user=user)
-    admin_pwd = request.form.get('admin_pwd')
+        return render_template('deploy/verify.html', deploy=_deploy, image=image, project=project,
+                               user=user)
+    admin_pwd = request.form.get('password')
     admin = User.where('is_admin', True).first()
     if admin.password == admin_pwd:
         send_deploy_request(_deploy)
@@ -241,7 +248,8 @@ def change_deploy_status(obj, status):
             msg = obj.image_name + ':' + obj.image_tag + ' 部署失败!'
         elif status == 'D':
             msg = obj.image_name + ':' + obj.image_tag + ' 已通知管理员审核!'
-        Ding().msg(msg).at(current_user.mobile).send()
+        user = User.find(obj.user_id)
+        Ding().msg(msg).at(user.mobile).send()
     else:
         obj.pro = status
     obj.save()
